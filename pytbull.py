@@ -1,11 +1,24 @@
 #!/usr/bin/env python
-#
-# Pytbull is an IDS/IPS testing framework for Snort & Suricata
-# It is shipped with 300 tests grouped in 9 testing modules
-#
-# Pytbull has been developed by Sebastien Damaye
-# sebastien #dot# damaye #at# gmail #dot# com
+"""
+Pytbull is an IDS/IPS testing framework for Snort & Suricata developed by
+Sebastien Damaye (sebastien #dot# damaye #at# gmail #dot# com).
+It is shipped with 300 tests grouped in 9 testing modules
 
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+"""
+
+from optparse import OptionParser
 import socket
 import time
 from ftplib import FTP
@@ -232,8 +245,21 @@ class Pytbull():
         self.finalReport.close()
 
 if __name__ == '__main__':
+
+    usage = "usage: sudo ./%prog -t <target> -i <snort|suricata>"
+    parser = OptionParser(usage)
+    parser.add_option("-t", "--target", dest="target",
+        help="host to connect to (e.g. 192.168.100.48)")
+    parser.add_option("-i", "--ids", dest="type",
+        help="IDS type (snort|suricata)")
+    (options, args) = parser.parse_args(sys.argv)
+    if not options.target:
+        parser.error("Host missing. Use -t <target>.")
+    if not options.type:
+        parser.error("IDS type missing. Use -i <snort|suricata>.")
+
     # Instantiate Pytbull class
-    oPytbull = Pytbull("192.168.100.48", "snort")
+    oPytbull = Pytbull(options.target, options.type)
     # Do all tests
     oPytbull.doAllTests()
     # Destruct object
