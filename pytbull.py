@@ -42,11 +42,6 @@ import clientSideAttacks
 
 class Pytbull():
     def __init__(self, target, idstype):
-        # Check if prgm is called with root privs
-        # Needed for generating raw packets (e.g. some nmap scans)
-        if(os.getuid() != 0):
-            print "Root privileges required!"
-            sys.exit(0)
 
         # Params
         self._final     = "./report.html"
@@ -57,15 +52,15 @@ class Pytbull():
         self._niktopath = "/pentest/scanners/nikto-2.1.4/"
 
         # Tests selection (False|True)
-        self.testRules              = True
-        self.badTraffic             = True
-        self.fragmentedPackets      = True
+        self.clientSideAttacks      = False #True
+        self.testRules              = False #True
+        self.badTraffic             = False #True
+        self.fragmentedPackets      = False #True
         self.multipleFailedLogins   = False
-        self.evasionTechniques      = True
+        self.evasionTechniques      = False #True
         self.malwaresViruses        = False
         self.shellCodes             = True
-        self.dos                    = True
-        self.clientSideAttacks      = False
+        self.dos                    = False #True
 
         # Vars initialization
         self._target    = target
@@ -75,9 +70,78 @@ class Pytbull():
         self._niktobin  = os.path.join(self._niktopath, "nikto.pl")
         self._niktocnf  = os.path.join(self._niktopath, "nikto.conf")
 
+        # Check if prgm is called with root privs
+        # Needed for generating raw packets (e.g. some nmap scans)
+        print "\nChecking root privileges",
+        if(os.getuid() != 0):
+            print ".............................. [ Failed ]"
+            print "\nRoot privileges required!"
+            sys.exit(0)
+        print ".............................. [   OK   ]"
+        
         # Remove temp file
+        print "Removing temporary file",
         if os.path.exists("/tmp/pytbull.tmp"):
             os.remove("/tmp/pytbull.tmp")
+        print "............................... [   OK   ]"
+
+        # Print tests selection
+        print "\nTESTS:"
+
+        print "Client Side Attacks",
+        if self.clientSideAttacks:
+            print "................................... [   yes  ]"
+        else:
+            print "................................... [   no   ]"
+
+        print "Test Rules",
+        if self.testRules:
+            print "............................................ [   yes  ]"
+        else:
+            print "............................................ [   no   ]"
+
+        print "Bad Traffic",
+        if self.badTraffic:
+            print "........................................... [   yes  ]"
+        else:
+            print "........................................... [   no   ]"
+
+        print "Fragmented Packets",
+        if self.fragmentedPackets:
+            print ".................................... [   yes  ]"
+        else:
+            print ".................................... [   no   ]"
+
+        print "Multiple Failed Logins",
+        if self.multipleFailedLogins:
+            print "................................ [   yes  ]"
+        else:
+            print "................................ [   no   ]"
+
+        print "Evasion Techniques",
+        if self.evasionTechniques:
+            print ".................................... [   yes  ]"
+        else:
+            print ".................................... [   no   ]"
+
+        print "Mawares & Viruses",
+        if self.malwaresViruses:
+            print "..................................... [   yes  ]"
+        else:
+            print "..................................... [   no   ]"
+
+        print "ShellCodes",
+        if self.shellCodes:
+            print "............................................ [   yes  ]"
+        else:
+            print "............................................ [   no   ]"
+
+        print "Denial of Service",
+        if self.dos:
+            print "..................................... [   yes  ]"
+        else:
+            print "..................................... [   no   ]"
+
 
         # Chek if paths are valid
         # ...to be completed...
@@ -89,8 +153,9 @@ class Pytbull():
     def doTest(self, payloads):
         for payload in payloads:
             # Perform test & write report
-            print " - %s" % payload[0]
-            content  = """<table border="1">"""
+            print "==> TEST #%s - %s" % (self.testnum, payload[0])
+            content  = """<p>[<a href="#">top</a>]</p>"""
+            content += """<table border="1">"""
             content += """<tr><th>Test num</th><td>%s</td></tr>""" % self.testnum
             self.testnum += 1
             content += """<tr><th>Time</th><td>%s</td></tr>""" % datetime.datetime.now()
@@ -110,8 +175,8 @@ class Pytbull():
                 content += """<tr><th style="vertical-align:top">Payload</th><td><textarea style="width:800px;height:60px;">%s</textarea></td></tr>""" % payload[2]
                 eval(payload[2])
 
-            # Sleep 10 seconds before getting alerts
-            time.sleep(10)
+            # Sleep before getting alerts
+            time.sleep(5)
 
             # Get new alerts and calculate new offset
             self.getAlertsFile(self._idstype)
@@ -122,8 +187,50 @@ class Pytbull():
             content += """</table><br />"""
             self.writeReport(content)
 
-            # Sleep 10 second before next test
-            time.sleep(10)
+            # Sleep before next test
+            time.sleep(3)
+
+    def doClientSideAttacksTest(self, payloads):
+        # Open socket (it will be closed at the end of the tests)
+        # on port 12345/tcp
+        # Check whether reverseshell is running on remote server (port 12345/tcp)
+        print "Checking if reverse shell is running on remote host",
+        try:
+            s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            s.connect((self._target,12345))
+        except:
+            print "... [ Failed ]"
+            print "\n***ERROR: Please setup reverse shell on remote server first!"
+            sys.exit(0)
+        print "... [   OK   ]"
+
+        for payload in payloads:
+            # Perform test & write report
+            print "==> TEST #%s - %s" % (self.testnum, payload[0])
+            content  = """<p>[<a href="#">top</a>]</p>"""
+            content += """<table border="1">"""
+            content += """<tr><th>Test num</th><td>%s</td></tr>""" % self.testnum
+            self.testnum += 1
+            content += """<tr><th>Time</th><td>%s</td></tr>""" % datetime.datetime.now()
+            content += """<tr><th>File</th><td>%s</td></tr>""" % payload[0]
+
+            # Send cmd to execute on server side (wget file)
+            s.send(payload[1])
+
+            # Sleep before getting alerts
+            time.sleep(5)
+
+            # Get new alerts and calculate new offset
+            self.getAlertsFile(self._idstype)
+            res = self.getAlertsFromOffset(self.report, self.offset)
+            content += """<tr><th style="vertical-align:top">Alerts</th><td><textarea style="width:800px;height:200px;">%s</textarea></td></tr>""" % res
+            self.offset = self.getOffset(self.report)
+
+            content += """</table><br />"""
+            self.writeReport(content)
+
+        # Close socket
+        s.close()
 
     def doAllTests(self):
         # Initialize report
@@ -134,51 +241,51 @@ class Pytbull():
         self.offset = self.getOffset(self.report)
 
         # Do all tests
+        # As the socket is not persistent, client side attacks have to be done before all tests
+        if self.clientSideAttacks:
+            self.writeReport("""<h2 id="client-side-attacks">Client Side Attacks</h2>""")
+            print "~~~~~~~~~~~\nClient Side Attacks"
+            self.doClientSideAttacksTest( clientSideAttacks.ClientSideAttacks(self._target).getPayloads() )
 
         if self.testRules:
-            self.writeReport("""<h2 id="test-rules">Test Rules</h2><p>[<a href="#">top</a>]</p>""")
+            self.writeReport("""<h2 id="test-rules">Test Rules</h2>""")
             print "~~~~~~~~~~~\nTest rules"
             self.doTest( testRules.TestRules(self._target).getPayloads() )
 
         if self.badTraffic:
-            self.writeReport("""<h2 id="bad-traffic">Bad Traffic</h2><p>[<a href="#">top</a>]</p>""")
+            self.writeReport("""<h2 id="bad-traffic">Bad Traffic</h2>""")
             print "~~~~~~~~~~~\nBad Traffic"
             self.doTest( badTraffic.BadTraffic(self._target).getPayloads() )
 
         if self.fragmentedPackets:
-            self.writeReport("""<h2 id="fragmented-packets">Fragmented Packets</h2><p>[<a href="#">top</a>]</p>""")
+            self.writeReport("""<h2 id="fragmented-packets">Fragmented Packets</h2>""")
             print "~~~~~~~~~~~\nFragmented Packets"
             self.doTest( fragmentedPackets.FragmentedPackets(self._target).getPayloads() )
 
         if self.multipleFailedLogins:
-            self.writeReport("""<h2 id="multiple-failed-logins">Multiple Failed Logins</h2><p>[<a href="#">top</a>]</p>""")
+            self.writeReport("""<h2 id="multiple-failed-logins">Multiple Failed Logins</h2>""")
             print "~~~~~~~~~~~\nMultiple Failed Logins"
             self.doTest( multipleFailedLogins.MultipleFailedLogins(self._target).getPayloads() )
 
         if self.evasionTechniques:
-            self.writeReport("""<h2 id="evasion-techniques">Evasion Techniques</h2><p>[<a href="#">top</a>]</p>""")
+            self.writeReport("""<h2 id="evasion-techniques">Evasion Techniques</h2>""")
             print "~~~~~~~~~~~\nEvasion Techniques"
             self.doTest( evasionTechniques.EvasionTechniques(self._target).getPayloads() )
 
         if self.malwaresViruses:
-            self.writeReport("""<h2 id="malwares-viruses">Malwares & Viruses</h2><p>[<a href="#">top</a>]</p>""")
+            self.writeReport("""<h2 id="malwares-viruses">Malwares & Viruses</h2>""")
             print "~~~~~~~~~~~\nMalwares & Viruses"
             self.doTest( malwaresViruses.MalwaresViruses(self._target).getPayloads() )
 
         if self.shellCodes:
-            self.writeReport("""<h2 id="shellcodes">ShellCodes</h2><p>[<a href="#">top</a>]</p>""")
+            self.writeReport("""<h2 id="shellcodes">ShellCodes</h2>""")
             print "~~~~~~~~~~~\nShellcodes"
             self.doTest( shellCodes.ShellCodes(self._target).getPayloads() )
 
         if self.dos:
-            self.writeReport("""<h2 id="dos">Denial of Service</h2><p>[<a href="#">top</a>]</p>""")
+            self.writeReport("""<h2 id="dos">Denial of Service</h2>""")
             print "~~~~~~~~~~~\nDoS"
             self.doTest( dos.Dos(self._target).getPayloads() )
-
-        if self.clientSideAttacks:
-            self.writeReport("""<h2 id="client-side-attacks">Client Side Attacks</h2><p>[<a href="#">top</a>]</p>""")
-            print "~~~~~~~~~~~\nClient Side Attacks"
-            self.doTest( clientSideAttacks.ClientSideAttacks(self._target).getPayloads() )
 
         # Finalize report
         self.finalizeReport()
@@ -224,6 +331,7 @@ class Pytbull():
         self.writeReport( "<h1>Detection Report - %s</h1>" % self._target )
         self.writeReport("""
             <ul>
+            <li><a href="#client-side-attacks">Client Side Attacks</a></li>
             <li><a href="#test-rules">Test Rules</a></li>
             <li><a href="#bad-traffic">Bad Traffic</a></li>
             <li><a href="#fragmented-packets">Fragmented Packets</a></li>
@@ -232,7 +340,6 @@ class Pytbull():
             <li><a href="#malwares-viruses">Malwares & Viruses</a></li>
             <li><a href="#shellcodes">ShellCodes</a></li>
             <li><a href="#dos">Denial of Service</a></li>
-            <li><a href="#client-side-attacks">Client Side Attacks</a></li>
             </ul><hr />
         """)
 

