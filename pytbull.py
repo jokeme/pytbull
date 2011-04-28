@@ -20,6 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
 from optparse import OptionParser
+import ConfigParser
 import socket
 import time
 from ftplib import FTP
@@ -37,38 +38,21 @@ import multipleFailedLogins
 import evasionTechniques
 import malwaresViruses
 import shellCodes
-import dos
+import denialOfService
 import clientSideAttacks
 
 class Pytbull():
     def __init__(self, target, idstype):
 
-        # Params
-        self._final     = "./report.html"
-        self._ftpuser   = "pilou"
-        self._ftppasswd = "oops"
-        self._sudo      = "/usr/bin/sudo"
-        self._nmap      = "/usr/bin/nmap"
-        self._niktopath = "/pentest/scanners/nikto-2.1.4/"
-
-        # Tests selection (False|True)
-        self.clientSideAttacks      = False #True
-        self.testRules              = False #True
-        self.badTraffic             = False #True
-        self.fragmentedPackets      = False #True
-        self.multipleFailedLogins   = False
-        self.evasionTechniques      = False #True
-        self.malwaresViruses        = False
-        self.shellCodes             = True
-        self.dos                    = False #True
+        # Read configuration
+        self.config = ConfigParser.RawConfigParser()
+        self.config.read('config.cfg')
 
         # Vars initialization
         self._target    = target
         self._idstype   = idstype
         self.testnum    = 1
         self.report     = "/tmp/pytbull.tmp"
-        self._niktobin  = os.path.join(self._niktopath, "nikto.pl")
-        self._niktocnf  = os.path.join(self._niktopath, "nikto.conf")
 
         # Check if prgm is called with root privs
         # Needed for generating raw packets (e.g. some nmap scans)
@@ -89,55 +73,55 @@ class Pytbull():
         print "\nTESTS:"
 
         print "Client Side Attacks",
-        if self.clientSideAttacks:
+        if self.config.get('TESTS', 'clientSideAttacks') == '1':
             print "................................... [   yes  ]"
         else:
             print "................................... [   no   ]"
 
         print "Test Rules",
-        if self.testRules:
+        if self.config.get('TESTS', 'testRules') == '1':
             print "............................................ [   yes  ]"
         else:
             print "............................................ [   no   ]"
 
         print "Bad Traffic",
-        if self.badTraffic:
+        if self.config.get('TESTS', 'badTraffic') == '1':
             print "........................................... [   yes  ]"
         else:
             print "........................................... [   no   ]"
 
         print "Fragmented Packets",
-        if self.fragmentedPackets:
+        if self.config.get('TESTS', 'fragmentedPackets') == '1':
             print ".................................... [   yes  ]"
         else:
             print ".................................... [   no   ]"
 
         print "Multiple Failed Logins",
-        if self.multipleFailedLogins:
+        if self.config.get('TESTS', 'multipleFailedLogins') == '1':
             print "................................ [   yes  ]"
         else:
             print "................................ [   no   ]"
 
         print "Evasion Techniques",
-        if self.evasionTechniques:
+        if self.config.get('TESTS', 'evasionTechniques') == '1':
             print ".................................... [   yes  ]"
         else:
             print ".................................... [   no   ]"
 
         print "Mawares & Viruses",
-        if self.malwaresViruses:
+        if self.config.get('TESTS', 'malwaresViruses') == '1':
             print "..................................... [   yes  ]"
         else:
             print "..................................... [   no   ]"
 
         print "ShellCodes",
-        if self.shellCodes:
+        if self.config.get('TESTS', 'shellCodes') == '1':
             print "............................................ [   yes  ]"
         else:
             print "............................................ [   no   ]"
 
         print "Denial of Service",
-        if self.dos:
+        if self.config.get('TESTS', 'denialOfService') == '1':
             print "..................................... [   yes  ]"
         else:
             print "..................................... [   no   ]"
@@ -242,50 +226,50 @@ class Pytbull():
 
         # Do all tests
         # As the socket is not persistent, client side attacks have to be done before all tests
-        if self.clientSideAttacks:
+        if self.config.get('TESTS', 'clientSideAttacks') == '1':
             self.writeReport("""<h2 id="client-side-attacks">Client Side Attacks</h2>""")
             print "~~~~~~~~~~~\nClient Side Attacks"
             self.doClientSideAttacksTest( clientSideAttacks.ClientSideAttacks(self._target).getPayloads() )
 
-        if self.testRules:
+        if self.config.get('TESTS', 'testRules') == '1':
             self.writeReport("""<h2 id="test-rules">Test Rules</h2>""")
             print "~~~~~~~~~~~\nTest rules"
             self.doTest( testRules.TestRules(self._target).getPayloads() )
 
-        if self.badTraffic:
+        if self.config.get('TESTS', 'badTraffic') == '1':
             self.writeReport("""<h2 id="bad-traffic">Bad Traffic</h2>""")
             print "~~~~~~~~~~~\nBad Traffic"
             self.doTest( badTraffic.BadTraffic(self._target).getPayloads() )
 
-        if self.fragmentedPackets:
+        if self.config.get('TESTS', 'fragmentedPackets') == '1':
             self.writeReport("""<h2 id="fragmented-packets">Fragmented Packets</h2>""")
             print "~~~~~~~~~~~\nFragmented Packets"
             self.doTest( fragmentedPackets.FragmentedPackets(self._target).getPayloads() )
 
-        if self.multipleFailedLogins:
+        if self.config.get('TESTS', 'multipleFailedLogins') == '1':
             self.writeReport("""<h2 id="multiple-failed-logins">Multiple Failed Logins</h2>""")
             print "~~~~~~~~~~~\nMultiple Failed Logins"
             self.doTest( multipleFailedLogins.MultipleFailedLogins(self._target).getPayloads() )
 
-        if self.evasionTechniques:
+        if self.config.get('TESTS', 'evasionTechniques') == '1':
             self.writeReport("""<h2 id="evasion-techniques">Evasion Techniques</h2>""")
             print "~~~~~~~~~~~\nEvasion Techniques"
             self.doTest( evasionTechniques.EvasionTechniques(self._target).getPayloads() )
 
-        if self.malwaresViruses:
+        if self.config.get('TESTS', 'malwaresViruses') == '1':
             self.writeReport("""<h2 id="malwares-viruses">Malwares & Viruses</h2>""")
             print "~~~~~~~~~~~\nMalwares & Viruses"
             self.doTest( malwaresViruses.MalwaresViruses(self._target).getPayloads() )
 
-        if self.shellCodes:
+        if self.config.get('TESTS', 'shellCodes') == '1':
             self.writeReport("""<h2 id="shellcodes">ShellCodes</h2>""")
             print "~~~~~~~~~~~\nShellcodes"
             self.doTest( shellCodes.ShellCodes(self._target).getPayloads() )
 
-        if self.dos:
-            self.writeReport("""<h2 id="dos">Denial of Service</h2>""")
-            print "~~~~~~~~~~~\nDoS"
-            self.doTest( dos.Dos(self._target).getPayloads() )
+        if self.config.get('TESTS', 'denialOfService') == '1':
+            self.writeReport("""<h2 id="denialOfService">Denial of Service</h2>""")
+            print "~~~~~~~~~~~\nDenial of Service"
+            self.doTest( denialOfService.DenialOfService(self._target).getPayloads() )
 
         # Finalize report
         self.finalizeReport()
@@ -300,7 +284,7 @@ class Pytbull():
         and save it to /tmp/pytbull.tmp"""
         # FTP Connection
         ftp = FTP(self._target)
-        ftp.login(self._ftpuser, self._ftppasswd)
+        ftp.login(self.config.get('CREDENTIALS', 'ftpuser'), self.config.get('CREDENTIALS', 'ftppasswd'))
         # Get file
         f = open(self.report, "w")
         if idstype == "snort":
@@ -326,7 +310,7 @@ class Pytbull():
 
     def initializeReport(self):
         """Open a report (HTML file) and initialize it with HTML headers"""
-        self.finalReport = open(self._final, 'w')
+        self.finalReport = open(self.config.get('PATHS', 'report'), 'w')
         self.writeReport( "<html><head><title>Detection Report</title></head><body>" )
         self.writeReport( "<h1>Detection Report - %s</h1>" % self._target )
         self.writeReport("""
@@ -339,7 +323,7 @@ class Pytbull():
             <li><a href="#evasion-techniques">Evasion Techniques</a></li>
             <li><a href="#malwares-viruses">Malwares & Viruses</a></li>
             <li><a href="#shellcodes">ShellCodes</a></li>
-            <li><a href="#dos">Denial of Service</a></li>
+            <li><a href="#denialOfService">Denial of Service</a></li>
             </ul><hr />
         """)
 
@@ -354,13 +338,19 @@ class Pytbull():
 
 if __name__ == '__main__':
 
-    usage = "usage: sudo ./%prog -t <target> -i <snort|suricata>"
-    parser = OptionParser(usage)
+    usg = "sudo ./%prog -t <target> -i <snort|suricata> [--version]"
+    config = ConfigParser.RawConfigParser()
+    config.read('config.cfg')
+    ver = "pytbull Version " + config.get('VERSION', 'version')
+
+    parser = OptionParser(usage=usg, version=ver)
     parser.add_option("-t", "--target", dest="target",
         help="host to connect to (e.g. 192.168.100.48)")
     parser.add_option("-i", "--ids", dest="type",
         help="IDS type (snort|suricata)")
+
     (options, args) = parser.parse_args(sys.argv)
+
     if not options.target:
         parser.error("Host missing. Use -t <target>.")
     if not options.type:

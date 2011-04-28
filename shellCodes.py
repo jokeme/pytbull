@@ -1,16 +1,21 @@
 #!/usr/bin/env python
-# These shellcodes have been extracted from the OSSIM distribution
-# This script is inspired from the one written by Jaime Blasco
-# (jaime.blasco #at# alienvault #dot# com)
+
+"""
+These shellcodes have been extracted from the OSSIM distribution
+This script is inspired from the one written by Jaime Blasco
+(jaime.blasco #at# alienvault #dot# com)
+"""
+
+import ConfigParser
 
 class ShellCodes():
     def __init__(self, target):
-        self.payloads = []
+        # Read configuration
+        self.config = ConfigParser.RawConfigParser()
+        self.config.read('config.cfg')
+
         self._target = target
-        self._sudo  = "/usr/bin/sudo"
-        self._nmap = "/usr/bin/nmap"
-        self._niktobin = "/pentest/scanners/nikto-2.1.4/nikto.pl"
-        self._niktocnf = "/pentest/scanners/nikto-2.1.4/nikto.conf"
+        self.payloads = []
 
     def getPayloads(self):
 

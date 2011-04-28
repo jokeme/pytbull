@@ -1,13 +1,15 @@
 #!/usr/bin/env python
 
+import ConfigParser
+
 class EvasionTechniques():
     def __init__(self, target):
-        self.payloads = []
+        # Read configuration
+        self.config = ConfigParser.RawConfigParser()
+        self.config.read('config.cfg')
+
         self._target = target
-        self._sudo  = "/usr/bin/sudo"
-        self._nmap = "/usr/bin/nmap"
-        self._niktobin = "/pentest/scanners/nikto-2.1.4/nikto.pl"
-        self._niktocnf = "/pentest/scanners/nikto-2.1.4/nikto.conf"
+        self.payloads = []
 
     def getPayloads(self):
 
@@ -15,14 +17,14 @@ class EvasionTechniques():
         self.payloads.append([
             "Nmap decoy test (6th position)",
             "command",
-            [self._sudo, self._nmap, '-sS', '-A', '-D', "192.168.100.1,192.168.100.2,192.168.100.3,192.168.100.4,192.168.100.5,ME", self._target]
+            [self.config.get('PATHS','sudo'), self.config.get('PATHS','nmap'), '-sS', '-A', '-D', "192.168.100.1,192.168.100.2,192.168.100.3,192.168.100.4,192.168.100.5,ME", self._target]
             ])
 
         ### Nmap decoy test (7th position)
         self.payloads.append([
             "Nmap decoy test (7th position)",
             "command",
-            [self._sudo, self._nmap, '-sS', '-A', '-D', "192.168.100.1,192.168.100.2,192.168.100.3,192.168.100.4,192.168.100.5,192.168.100.6,ME", self._target]
+            [self.config.get('PATHS','sudo'), self.config.get('PATHS','nmap'), '-sS', '-A', '-D', "192.168.100.1,192.168.100.2,192.168.100.3,192.168.100.4,192.168.100.5,192.168.100.6,ME", self._target]
             ])
 
         ### Hex encoding
@@ -37,77 +39,77 @@ class EvasionTechniques():
         self.payloads.append([
             "Nmap scan with fragmentation",
             "command",
-            [self._sudo, self._nmap, '-Pn', '-sS', '-A', '-f', self._target]
+            [self.config.get('PATHS','sudo'), self.config.get('PATHS','nmap'), '-Pn', '-sS', '-A', '-f', self._target]
             ])
 
         ### Nikto Random URI encoding
         self.payloads.append([
             "Nikto Random URI encoding",
             "command",
-            [self._sudo, self._niktobin, '-config', self._niktocnf, '-h', self._target, '-Plugins', 'cgi', '-evasion', '1']
+            [self.config.get('PATHS','sudo'), self.config.get('PATHS','nikto'), '-config', self.config.get('PATHS','niktoconf'), '-h', self._target, '-Plugins', 'cgi', '-evasion', '1']
             ])
 
         ### Nikto Directory self reference
         self.payloads.append([
             "Nikto Directory self reference",
             "command",
-            [self._sudo, self._niktobin, '-config', self._niktocnf, '-h', self._target, '-Plugins', 'cgi', '-evasion', '2']
+            [self.config.get('PATHS','sudo'), self.config.get('PATHS','nikto'), '-config', self.config.get('PATHS','niktoconf'), '-h', self._target, '-Plugins', 'cgi', '-evasion', '2']
             ])
 
         ### Nikto Premature URL ending
         self.payloads.append([
             "Nikto Premature URL ending",
             "command",
-            [self._sudo, self._niktobin, '-config', self._niktocnf, '-h', self._target, '-Plugins', 'cgi', '-evasion', '3']
+            [self.config.get('PATHS','sudo'), self.config.get('PATHS','nikto'), '-config', self.config.get('PATHS','niktoconf'), '-h', self._target, '-Plugins', 'cgi', '-evasion', '3']
             ])
 
         ### Nikto Prepend long random string
         self.payloads.append([
             "Nikto Prepend long random string",
             "command",
-            [self._sudo, self._niktobin, '-config', self._niktocnf, '-h', self._target, '-Plugins', 'cgi', '-evasion', '4']
+            [self.config.get('PATHS','sudo'), self.config.get('PATHS','nikto'), '-config', self.config.get('PATHS','niktoconf'), '-h', self._target, '-Plugins', 'cgi', '-evasion', '4']
             ])
 
         ### Nikto Fake paramater
         self.payloads.append([
             "Nikto Fake paramater",
             "command",
-            [self._sudo, self._niktobin, '-config', self._niktocnf, '-h', self._target, '-Plugins', 'cgi', '-evasion', '5']
+            [self.config.get('PATHS','sudo'), self.config.get('PATHS','nikto'), '-config', self.config.get('PATHS','niktoconf'), '-h', self._target, '-Plugins', 'cgi', '-evasion', '5']
             ])
 
         ### Nikto TAB as request spacer
         self.payloads.append([
             "Nikto TAB as request spacer",
             "command",
-            [self._sudo, self._niktobin, '-config', self._niktocnf, '-h', self._target, '-Plugins', 'cgi', '-evasion', '6']
+            [self.config.get('PATHS','sudo'), self.config.get('PATHS','nikto'), '-config', self.config.get('PATHS','niktoconf'), '-h', self._target, '-Plugins', 'cgi', '-evasion', '6']
             ])
 
         ### Nikto Change the case of the URL
         self.payloads.append([
             "Nikto Change the case of the URL",
             "command",
-            [self._sudo, self._niktobin, '-config', self._niktocnf, '-h', self._target, '-Plugins', 'cgi', '-evasion', '7']
+            [self.config.get('PATHS','sudo'), self.config.get('PATHS','nikto'), '-config', self.config.get('PATHS','niktoconf'), '-h', self._target, '-Plugins', 'cgi', '-evasion', '7']
             ])
 
         ### Nikto Windows directory separator
         self.payloads.append([
             "Nikto Windows directory separator",
             "command",
-            [self._sudo, self._niktobin, '-config', self._niktocnf, '-h', self._target, '-Plugins', 'cgi', '-evasion', '8']
+            [self.config.get('PATHS','sudo'), self.config.get('PATHS','nikto'), '-config', self.config.get('PATHS','niktoconf'), '-h', self._target, '-Plugins', 'cgi', '-evasion', '8']
             ])
 
         ### Nikto Carriage return as request spacer
         self.payloads.append([
             "Nikto Carriage return as request spacer",
             "command",
-            [self._sudo, self._niktobin, '-config', self._niktocnf, '-h', self._target, '-Plugins', 'cgi', '-evasion', 'A']
+            [self.config.get('PATHS','sudo'), self.config.get('PATHS','nikto'), '-config', self.config.get('PATHS','niktoconf'), '-h', self._target, '-Plugins', 'cgi', '-evasion', 'A']
             ])
 
         ### Nikto Binary value as request spacer
         self.payloads.append([
             "Nikto Binary value as request spacer",
             "command",
-            [self._sudo, self._niktobin, '-config', self._niktocnf, '-h', self._target, '-Plugins', 'cgi', '-evasion', 'B']
+            [self.config.get('PATHS','sudo'), self.config.get('PATHS','nikto'), '-config', self.config.get('PATHS','niktoconf'), '-h', self._target, '-Plugins', 'cgi', '-evasion', 'B']
             ])
 
         ### Javascript obfuscation

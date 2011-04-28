@@ -1,13 +1,15 @@
 #!/usr/bin/env python
 
+import ConfigParser
+
 class TestRules():
     def __init__(self, target):
-        self.payloads = []
+        # Read configuration
+        self.config = ConfigParser.RawConfigParser()
+        self.config.read('config.cfg')
+
         self._target = target
-        self._sudo  = "/usr/bin/sudo"
-        self._nmap = "/usr/bin/nmap"
-        self._niktobin = "/pentest/scanners/nikto-2.1.4/nikto.pl"
-        self._niktocnf = "/pentest/scanners/nikto-2.1.4/nikto.conf"
+        self.payloads = []
 
     def getPayloads(self):
         ### Simple LFI
@@ -30,14 +32,14 @@ class TestRules():
         self.payloads.append([
             "Full SYN Scan",
             "command",
-            [self._sudo, self._nmap, '-sS', '-p-', self._target]
+            [self.config.get('PATHS','sudo'), self.config.get('PATHS','nmap'), '-sS', '-p-', self._target]
             ])
 
         ### Full Connect() Scan
         self.payloads.append([
             "Full Connect() Scan",
             "command",
-            [self._nmap, '-sT', '-p-', self._target]
+            [self.config.get('PATHS','nmap'), '-sT', '-p-', self._target]
             ])
 
         ### SQL Injection
@@ -60,7 +62,7 @@ class TestRules():
         self.payloads.append([
             "Nikto Scan",
             "command",
-            [self._sudo, self._niktobin, '-config', self._niktocnf, '-h', self._target, '-Plugins', 'cgi']
+            [self.config.get('PATHS','sudo'), self.config.get('PATHS','nikto'), '-config', self.config.get('PATHS','niktoconf'), '-h', self._target, '-Plugins', 'cgi']
             ])
 
         return self.payloads
