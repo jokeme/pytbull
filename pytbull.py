@@ -42,8 +42,9 @@ import denialOfService
 import clientSideAttacks
 
 class Pytbull():
-    def __init__(self, target, idstype):
-
+    def __init__(self, banner, target, idstype):
+        print banner + "\n"
+        
         # Read configuration
         self.config = ConfigParser.RawConfigParser()
         self.config.read('config.cfg')
@@ -56,6 +57,8 @@ class Pytbull():
 
         # Check if prgm is called with root privs
         # Needed for generating raw packets (e.g. some nmap scans)
+        print "BASIC CHECKS"
+        print "------------"
         print "\nChecking root privileges",
         if(os.getuid() != 0):
             print ".............................. [ Failed ]"
@@ -71,6 +74,7 @@ class Pytbull():
 
         # Print tests selection
         print "\nTESTS:"
+        print "------------"
 
         print "Client Side Attacks",
         if self.config.get('TESTS', 'clientSideAttacks') == '1':
@@ -126,7 +130,7 @@ class Pytbull():
         else:
             print "..................................... [   no   ]"
 
-
+        print ""
         # Chek if paths are valid
         # ...to be completed...
         
@@ -338,10 +342,17 @@ class Pytbull():
 
 if __name__ == '__main__':
 
+    banner = """
+                         _   _           _ _
+             _ __  _   _| |_| |__  _   _| | |
+            | '_ \| | | | __| '_ \| | | | | |
+            | |_) | |_| | |_| |_) | |_| | | |
+            | .__/ \__, |\__|_.__/ \__,_|_|_|
+            |_|    |___/"""
     usg = "sudo ./%prog -t <target> -i <snort|suricata> [--version]"
     config = ConfigParser.RawConfigParser()
     config.read('config.cfg')
-    ver = "pytbull Version " + config.get('VERSION', 'version')
+    ver = banner + "          Version " + config.get('VERSION', 'version') + '\n'
 
     parser = OptionParser(usage=usg, version=ver)
     parser.add_option("-t", "--target", dest="target",
@@ -357,7 +368,7 @@ if __name__ == '__main__':
         parser.error("IDS type missing. Use -i <snort|suricata>.")
 
     # Instantiate Pytbull class
-    oPytbull = Pytbull(options.target, options.type)
+    oPytbull = Pytbull(banner, options.target, options.type)
     # Do all tests
     oPytbull.doAllTests()
     # Destruct object
