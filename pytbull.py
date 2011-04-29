@@ -36,7 +36,6 @@ import badTraffic
 import fragmentedPackets
 import multipleFailedLogins
 import evasionTechniques
-import malwaresViruses
 import shellCodes
 import denialOfService
 import clientSideAttacks
@@ -111,12 +110,6 @@ class Pytbull():
             print ".................................... [   yes  ]"
         else:
             print ".................................... [   no   ]"
-
-        print "Mawares & Viruses",
-        if self.config.get('TESTS', 'malwaresViruses') == '1':
-            print "..................................... [   yes  ]"
-        else:
-            print "..................................... [   no   ]"
 
         print "ShellCodes",
         if self.config.get('TESTS', 'shellCodes') == '1':
@@ -259,11 +252,6 @@ class Pytbull():
             self.writeReport("""<h2 id="evasion-techniques">Evasion Techniques</h2>""")
             print "~~~~~~~~~~~\nEvasion Techniques"
             self.doTest( evasionTechniques.EvasionTechniques(self._target).getPayloads() )
-
-        if self.config.get('TESTS', 'malwaresViruses') == '1':
-            self.writeReport("""<h2 id="malwares-viruses">Malwares & Viruses</h2>""")
-            print "~~~~~~~~~~~\nMalwares & Viruses"
-            self.doTest( malwaresViruses.MalwaresViruses(self._target).getPayloads() )
 
         if self.config.get('TESTS', 'shellCodes') == '1':
             self.writeReport("""<h2 id="shellcodes">ShellCodes</h2>""")
@@ -412,7 +400,6 @@ class Pytbull():
             <li><a href="#fragmented-packets">Fragmented Packets</a></li>
             <li><a href="#multiple-failed-logins">Multiple Failed Logins</a></li>
             <li><a href="#evasion-techniques">Evasion Techniques</a></li>
-            <li><a href="#malwares-viruses">Malwares & Viruses</a></li>
             <li><a href="#shellcodes">ShellCodes</a></li>
             <li><a href="#denialOfService">Denial of Service</a></li>
             </ul></td></tr></table><hr />

@@ -7,7 +7,7 @@ modifications and to check/validate configurations.
 
 MODULES
 -------
-The framework is shipped with about 300 tests grouped in 9 testing modules:
+The framework is shipped with about 300 tests grouped in 8 testing modules:
 
 - clientSideAttacks
       This module uses a reverse shell to provide the server with instructions
@@ -33,11 +33,6 @@ The framework is shipped with about 300 tests grouped in 9 testing modules:
 - evasionTechniques
       Various  evasion  techniques are used to check if the IDS/IPS can detect
       them.
-
-- malwaresViruses
-      As well as the  clientSideAttacks  module,  this module uses the reverse
-      shell  to  download  malwares & viruses  from the server. This tests the
-      ability of the server to detect viruses.
 
 - shellCodes
       Send various shellcodes to the server on port 21/tcp to test the ability
