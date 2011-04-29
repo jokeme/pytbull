@@ -53,7 +53,7 @@ class Pytbull():
         self._target    = target
         self._idstype   = idstype
         self.testnum    = 1
-        self.report     = "/tmp/pytbull.tmp"
+        self.tmpreport  = "/tmp/pytbull.tmp"
 
         # Check if prgm is called with root privs
         # Needed for generating raw packets (e.g. some nmap scans)
@@ -168,9 +168,9 @@ class Pytbull():
 
             # Get new alerts and calculate new offset
             self.getAlertsFile(self._idstype)
-            res = self.getAlertsFromOffset(self.report, self.offset)
+            res = self.getAlertsFromOffset(self.tmpreport, self.offset)
             content += """<tr><th style="vertical-align:top">Alerts</th><td><textarea style="width:800px;height:200px;">%s</textarea></td></tr>""" % res
-            self.offset = self.getOffset(self.report)
+            self.offset = self.getOffset(self.tmpreport)
 
             content += """</table><br />"""
             self.writeReport(content)
@@ -210,11 +210,11 @@ class Pytbull():
 
             # Get new alerts and calculate new offset
             self.getAlertsFile(self._idstype)
-            res = self.getAlertsFromOffset(self.report, self.offset)
+            res = self.getAlertsFromOffset(self.tmpreport, self.offset)
             content += """<tr><th style="vertical-align:top">Alerts</th><td><textarea style="width:800px;height:200px;">%s</textarea></td></tr>""" % res
-            self.offset = self.getOffset(self.report)
+            self.offset = self.getOffset(self.tmpreport)
 
-            content += """</table><br />"""
+            content += """</table>"""
             self.writeReport(content)
 
         # Close socket
@@ -226,7 +226,7 @@ class Pytbull():
 
         # Initial offset
         self.getAlertsFile(self._idstype)
-        self.offset = self.getOffset(self.report)
+        self.offset = self.getOffset(self.tmpreport)
 
         # Do all tests
         # As the socket is not persistent, client side attacks have to be done before all tests
@@ -288,16 +288,16 @@ class Pytbull():
         and save it to /tmp/pytbull.tmp"""
         # FTP Connection
         ftp = FTP(self._target)
-        ftp.login(self.config.get('CREDENTIALS', 'ftpuser'), self.config.get('CREDENTIALS', 'ftppasswd'))
+        ftp.login('pilou', 'oops')
         # Get file
-        f = open(self.report, "w")
+        f = open(self.tmpreport, "w")
         if idstype == "snort":
-            alertsFile = "/var/log/snort/alert"
+            alertsFile = self.config.get('PATHS', 'snortalertsfile')
         else:
-            alertsFile = "/var/log/suricata/access.log"
+            alertsFile = self.config.get('PATHS', 'suricataalertsfile')
         ftp.retrbinary("RETR %s" % alertsFile, f.write)
+        #Close file and FTP connection
         f.close()
-        #Close FTP connection
         ftp.quit()
 
     def getOffset(self, report):
@@ -316,7 +316,94 @@ class Pytbull():
         """Open a report (HTML file) and initialize it with HTML headers"""
         self.finalReport = open(self.config.get('PATHS', 'report'), 'w')
         self.writeReport( "<html><head><title>Detection Report</title></head><body>" )
-        self.writeReport( "<h1>Detection Report - %s</h1>" % self._target )
+        self.writeReport("""<table><tr><td style="width:500px;">
+            <pre style="font: 10px/5px monospace;">
+                                           @@@@@@
+                        @@@@@@@@          @@@@@@@@@@@
+                    @@@@@    @@@@          @@@@    @@@@
+                  @@@@@@   @@  @            @@@@@   @@@@@@
+                @@@@@@@   @@  @             @@@@@@@@   @@@@@
+               @@@   @   @@@@@@@             @@@@@@@@@   @@@@@
+              @@@   @   @@@@@@@@              @@@@@@@@@@  @@@@@
+             @@@  @@   @  @@@@@             @@ @@@@@@@@@@ @@@@@
+            @@   @@  @@  @@@@@@@@@       @@@@@@ @@@@@@@@@@@@ @@@
+            @@   @  @@  @@@@@@@@@@@@@@@@@@@@@  @@@    @@@@@@ @@@@
+            @@   @  @   @@@@@@@   @@  @@@@@@@          @@@@@@@@@@@
+           @@@   @@@@   @    @@    @    @@@@@@           @@@@ @@@@@
+           @@@    @@  @@      @  @@@    @@@@@              @@  @@@@
+          @@   @  @@@@         @@@      @  @                   @@ @@
+          @@@ @@@@@@@            @     @@                          @@
+          @  @@                  @    @@@                     @@@@  @
+          @  @                   @@@  @@                    @@@@@@@@@
+          @      @                  @@@      @@@            @@@@@@@@@@
+          @      @            @      @@  @      @@         @@@@@@@@@@
+         @   @   @           @@             @    @      @@ @@@@@@@@@
+         @  @   @           @@        @                  @@@@@@@@@@@
+         @@@  @@           @@                              @@@@@@@@@
+              @            @              @  @            @@@@@@@@@@
+             @                             @ @           @@@@@@@@@@@
+             @                 @@@   @     @ @       @@  @@@@@@@@@@@
+                              @@@@@  @     @ @ @@   @@@@@@@ @@@@@@@@@
+                            @@@@@              @@    @@@@@@   @@@@@@@
+                            @@@@@     @       @ @    @@@@@@@@@ @@@@@@
+                           @@@@@@@@   @         @ @@@@@@@@@@@@@@@@@@
+                          @@@@@@@@@   @          @@@@   @     @@@@@@
+            @         @@@@@@@@@@@@@@ @@        @ @@@   @  @@@@@@@@@@
+            @    @   @@@@  @@@@@@@@@@@@               @        @@@@@
+            @     @@@@@@   @@ @@@@@@@@@               @ @@  @   @@@@
+            @      @@@@@ @@@@  @@@@@@@@@                 @@@    @@@@
+            @   @@@@@@@@ @@@@@@@@@@@@@@@@                  @   @@@@@
+            @  @@@@@@@@@@  @@@@@@@@@  @@@                      @@@ @
+           @ @@@    @@@@@       @@@   @@@       @       @@@   @@@   @
+           @           @@@      @     @@         @      @@@@@@@@    @
+           @            @@@@@@@@     @@           @@    @@@@@@@     @@
+           @       @@              @@@                  @@@@         @
+           @        @             @@                   @@@@          @
+           @         @           @                     @@@           @
+           @          @         @                      @@@           @@
+           @          @                                @@@           @@
+          @           @@                                @@@          @@
+          @            @@    @                           @@@         @
+          @              @   @                            @@         @
+          @               @ @                              @@        @
+                           @                               @@@       @
+           @                                                @@       @
+          @                                 @@@@@@@          @@     @@
+          @                              @@@@@@    @@         @     @
+          @                             @@    @      @        @     @
+          @                            @@     @     @@@       @    @
+          @                             @  @  @@  @@@@@           @@
+          @                             @@    @@  @  @@        @ @@
+          @                              @   @@  @@ @@@        @ @@
+         @                                @@@@@   @@@@         @  @
+         @                                 @@@@    @           @  @
+        @                                   @@@@@@@@           @  @@
+        @           @                         @@               @   @
+       @            @                                          @   @@
+                    @@                         @               @   @@@
+      @              @                         @               @     @
+      @              @                         @              @       @
+     @               @                         @              @       @@
+     @               @                        @@@             @        @
+                     @                   @@@@@@@@@@          @         @@
+    @                @@                  @   @@@@@@         @           @
+                      @@                @@   @             @@
+  @@                   @@               @@   @ @@@@@      @@             @
+  @                     @@       @@@@@@  @@@@@@@@@@  @@   @              @
+ @                        @@@@@@@@@@        @   @   @@@@@@                @
+ @                                  @@@  @@@   @@ @@     @                @
+@                                    @        @   @      @                 @
+@                                            @   @       @                 @
+@                                           @   @        @                  @
+                                                         @
+                                                        @
+                                             @@        @
+                                            @         @
+                                           @         @
+                                          @@        @@
+            </pre></td>""")
+        self.writeReport( """<td><h1>Pytbull Detection Report</h1>""" )
+        self.writeReport( "<p>Remote Host: %s</p>" % self._target )
         self.writeReport("""
             <ul>
             <li><a href="#client-side-attacks">Client Side Attacks</a></li>
@@ -328,7 +415,7 @@ class Pytbull():
             <li><a href="#malwares-viruses">Malwares & Viruses</a></li>
             <li><a href="#shellcodes">ShellCodes</a></li>
             <li><a href="#denialOfService">Denial of Service</a></li>
-            </ul><hr />
+            </ul></td></tr></table><hr />
         """)
 
     def writeReport(self, content):

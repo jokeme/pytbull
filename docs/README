@@ -1,0 +1,51 @@
+DESCRIPTION
+-----------
+pytbull is an Intrusion Detection/Prevention System (IDS/IPS) Testing Framework
+for  Snort  and  Suricata.  It  can  be used to test the detection and blocking
+capabilities  of  an IDS/IPS,  to compare  IDS/IPS,  to  compare  configuration
+modifications and to check/validate configurations.
+
+MODULES
+-------
+The framework is shipped with about 300 tests grouped in 9 testing modules:
+
+- clientSideAttacks
+      This module uses a reverse shell to provide the server with instructions
+      to download remote malicious files. This module tests the ability of the
+      IDS/IPS to protect against client-side attacks.
+
+- testRules
+      Basic rules testing.  These attacks  are supposed  to be detected by the
+      rules sets shipped with the IDS/IPS.
+
+- badTraffic
+      Non RFC compliant packets are sent to the server to test how packets are
+      processed.
+
+- fragmentedPackets
+      Various fragmented  payloads  are sent to server  to test its ability to
+      recompose them and detect the attacks.
+
+- multipleFailedLogins
+      Tests the ability of the server to track multiple failed logins (e.g.
+      FTP). Makes use of custom rules on Snort and Suricata.
+
+- evasionTechniques
+      Various  evasion  techniques are used to check if the IDS/IPS can detect
+      them.
+
+- malwaresViruses
+      As well as the  clientSideAttacks  module,  this module uses the reverse
+      shell  to  download  malwares & viruses  from the server. This tests the
+      ability of the server to detect viruses.
+
+- shellCodes
+      Send various shellcodes to the server on port 21/tcp to test the ability
+      of the server to detect/reject shellcodes.
+
+- denialOfService
+      Tests the ability of the IDS/IPS to protect against DoS attempts.
+
+
+It is easily configurable and could integrate new modules in the future.
+
