@@ -140,7 +140,7 @@ class Pytbull():
         # ...to be completed...
         
     def testRules(self):
-        payloads = TestRules(self._target).getPayloas()
+        payloads = TestRules(self._target).getPayloads()
         tests(payloads)
 
     def doTest(self, payloads):
