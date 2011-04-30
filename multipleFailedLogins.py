@@ -1,4 +1,10 @@
 #!/usr/bin/env python
+"""
+This module tests the ability of the server to track multiple
+failed logins, which could be brute forcing attemps. The example
+provided in this module is composed of 5 login attemps against the
+FTP service.
+"""
 
 import ConfigParser
 
@@ -12,6 +18,12 @@ class MultipleFailedLogins():
         self.payloads = []
 
     def getPayloads(self):
+
+        self.payloads.append(['albert', 'abc'])
+        self.payloads.append(['bernadette', 'bcd'])
+        self.payloads.append(['christian', 'cde'])
+        self.payloads.append(['delores', 'def'])
+        self.payloads.append(['erik', 'efg'])
 
         return self.payloads
 

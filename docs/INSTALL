@@ -36,5 +36,5 @@ SERVER
 
 THIRD PARTY
 
-    Another  server  could  be  needed  to  host malicious files (see ./pdf/ and
-    ./virs/ directories). You can also use online resources.
+    Another  server  could  be  needed  to  host malicious files (see the ./pdf/
+    directory). You can also use online resources.
