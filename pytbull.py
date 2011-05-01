@@ -60,7 +60,7 @@ class Pytbull():
         # Needed for generating raw packets (e.g. some nmap scans)
         print "BASIC CHECKS"
         print "------------"
-        print "\nChecking root privileges".ljust(65, '.'),
+        print "Checking root privileges".ljust(65, '.'),
         if(os.getuid() != 0):
             print "[ Failed ]"
             print "\nRoot privileges required!"
@@ -148,14 +148,15 @@ class Pytbull():
     def doTest(self, payloads):
         for payload in payloads:
             # Perform test & write report
-            print "==> TEST #%s - %s" % (self.testnum, payload[0])
+            s = "TEST #%s - %s" % (self.testnum, payload[0])
+            print s[:62].ljust(65,'.'),
             content  = """<p>[<a href="#">top</a>]</p>"""
             content += """<table border="1">"""
             content += """<tr><th>Test num</th><td>%s</td></tr>""" % self.testnum
             self.testnum += 1
             content += """<tr><th>Time</th><td>%s</td></tr>""" % datetime.datetime.now()
             content += """<tr><th>Test name</th><td>%s</td></tr>""" % payload[0]
-            pattern = "" #v1.0
+            pattern = ""
 
             if payload[1] == "socket":
                 content += """<tr><th>Port</th><td>%s/tcp</td></tr>""" % payload[2]
@@ -163,16 +164,16 @@ class Pytbull():
                 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
                 s.connect((self._target,payload[2]))
                 s.send(payload[3])
-                pattern = payload[4] #v1.0
+                pattern = payload[4]
                 s.close()
             elif payload[1] == "command":
                 content += """<tr><th style="vertical-align:top">Payload</th><td><textarea style="width:800px;height:60px;">%s</textarea></td></tr>""" % ' '.join(payload[2])
-                subprocess.call(payload[2])
-                pattern = payload[3] # v1.0
+                subprocess.call(payload[2], stdout=subprocess.PIPE)
+                pattern = payload[3]
             elif payload[1] == "scapy":
                 content += """<tr><th style="vertical-align:top">Payload</th><td><textarea style="width:800px;height:60px;">%s</textarea></td></tr>""" % payload[2]
                 eval(payload[2])
-                pattern = payload[3] # v1.0
+                pattern = payload[3]
 
             # Sleep before getting alerts
             time.sleep(5)
@@ -201,6 +202,8 @@ class Pytbull():
             content += """</table>"""
             self.writeReport(content)
 
+            print "[   OK   ]"
+            
             # Sleep before next test
             time.sleep(3)
 
@@ -289,51 +292,51 @@ class Pytbull():
         # As the socket is not persistent, client side attacks have to be done before all tests
         if self.config.get('TESTS', 'clientSideAttacks') == '1':
             self.writeReport("""<h2 id="client-side-attacks">Client Side Attacks</h2>""")
-            print "~~~~~~~~~~~\nClient Side Attacks"
+            print "\nCLIENT SIDE ATTACKS\n------------"
             self.doClientSideAttacksTest( clientSideAttacks.ClientSideAttacks(self._target).getPayloads() )
 
         if self.config.get('TESTS', 'testRules') == '1':
             self.writeReport("""<h2 id="test-rules">Test Rules</h2>""")
-            print "~~~~~~~~~~~\nTest rules"
+            print "\nTEST RULES\n------------"
             self.doTest( testRules.TestRules(self._target).getPayloads() )
 
         if self.config.get('TESTS', 'badTraffic') == '1':
             self.writeReport("""<h2 id="bad-traffic">Bad Traffic</h2>""")
-            print "~~~~~~~~~~~\nBad Traffic"
+            print "\nBAD TRAFFIC\n------------"
             self.doTest( badTraffic.BadTraffic(self._target).getPayloads() )
 
         if self.config.get('TESTS', 'fragmentedPackets') == '1':
             self.writeReport("""<h2 id="fragmented-packets">Fragmented Packets</h2>""")
-            print "~~~~~~~~~~~\nFragmented Packets"
+            print "\nFRAGMENTED PACKETS\n------------"
             self.doTest( fragmentedPackets.FragmentedPackets(self._target).getPayloads() )
 
         if self.config.get('TESTS', 'multipleFailedLogins') == '1':
             self.writeReport("""<h2 id="multiple-failed-logins">Multiple Failed Logins</h2>""")
-            print "~~~~~~~~~~~\nMultiple Failed Logins"
+            print "\nMULTIPLE FAILED LOGINS\n------------"
             self.doMultipleFailedLoginsTest( multipleFailedLogins.MultipleFailedLogins(self._target).getPayloads() )
 
         if self.config.get('TESTS', 'evasionTechniques') == '1':
             self.writeReport("""<h2 id="evasion-techniques">Evasion Techniques</h2>""")
-            print "~~~~~~~~~~~\nEvasion Techniques"
+            print "\nEVASION TECHNIQUES\n------------"
             self.doTest( evasionTechniques.EvasionTechniques(self._target).getPayloads() )
 
         if self.config.get('TESTS', 'shellCodes') == '1':
             self.writeReport("""<h2 id="shellcodes">ShellCodes</h2>""")
-            print "~~~~~~~~~~~\nShellcodes"
+            print "\nSHELLCODES\n------------"
             self.doTest( shellCodes.ShellCodes(self._target).getPayloads() )
 
         if self.config.get('TESTS', 'denialOfService') == '1':
             self.writeReport("""<h2 id="denialOfService">Denial of Service</h2>""")
-            print "~~~~~~~~~~~\nDenial of Service"
+            print "\nDENIAL OF SERVICE\n------------"
             self.doTest( denialOfService.DenialOfService(self._target).getPayloads() )
 
         # Finalize report
         self.finalizeReport()
 
         # Done!
-        print "\n\n----------------"
-        print "DONE!"
-        print "----------------\n"
+        print "\n\n-----------------------"
+        print "DONE. Check the report."
+        print "-----------------------\n"
 
     def getAlertsFile(self, idstype):
         """Get the alerts file (FTP) from a remote Snort or Suricata server

