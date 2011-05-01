@@ -32,7 +32,8 @@ class ShellCodes():
             "SHELLCODE ** sparc setuid 0",
             "socket",
             21,
-            shellcode
+            shellcode,
+            "1:647:9"
             ])
 
         #SHELLCODE x86 setgid
@@ -63,7 +64,8 @@ class ShellCodes():
             "SHELLCODE IRIX SGI + NOOP",
             "socket",
             21,
-            shellcode
+            shellcode,
+            "1:649:10"
             ])
 
         # SHELLCODE x86 setgid 0 && SHELLCODE x86 setuid 0
@@ -77,7 +79,8 @@ class ShellCodes():
             "SHELLCODE x86 setgid 0 && SHELLCODE x86 setuid 0",
             "socket",
             21,
-            shellcode
+            shellcode,
+            "1:650:10"
             ])
 
         #OVERFLOW attempt
@@ -86,7 +89,8 @@ class ShellCodes():
             "OVERFLOW attempt",
             "socket",
             21,
-            overflow
+            overflow,
+            "(?i)overflow"
             ])
 
         #SHELLCODE x86 setuid 0
@@ -100,7 +104,8 @@ class ShellCodes():
             "SHELLCODE x86 setuid 0",
             "socket",
             21,
-            shellcode
+            shellcode,
+            "1:650:10"
             ])
 
         # win32_bind_dllinject - EXITFUNC=seh DLL=c:\ LPORT=4444 Size=312 Encoder=PexFnstenvSub
@@ -129,7 +134,8 @@ class ShellCodes():
             """win32_bind_dllinject - EXITFUNC=seh DLL=c:\ LPORT=4444 Size=312 Encoder=PexFnstenvSub""",
             "socket",
             21,
-            shellcode
+            shellcode,
+            "1:17322:1"
             ])
 
         #win32_bind_dllinject -  EXITFUNC=seh DLL=c:\ LPORT=4444 Size=312 Encoder=Pex
@@ -157,7 +163,8 @@ class ShellCodes():
             """win32_bind_dllinject -  EXITFUNC=seh DLL=c:\ LPORT=4444 Size=312 Encoder=Pex""",
             "socket",
             21,
-            shellcode
+            shellcode,
+            "1:17344:1"
             ])
 
         # win32_bind -  EXITFUNC=seh LPORT=4444 Size=709 Encoder=PexAlphaNum
@@ -210,7 +217,8 @@ class ShellCodes():
             """win32_bind -  EXITFUNC=seh LPORT=4444 Size=709 Encoder=PexAlphaNum""",
             "socket",
             21,
-            shellcode
+            shellcode,
+            "1:17325:1"
             ])
 
         #db "cmd.exe /c net user USERNAME PASSWORD /ADD && net localgroup Administrators /ADD USERNAMEN"
@@ -226,7 +234,8 @@ class ShellCodes():
             """db "cmd.exe /c net user USERNAME PASSWORD /ADD && net localgroup Administrators /ADD USERNAMEN" """,
             "socket",
             21,
-            shellcode
+            shellcode,
+            ""
             ])
 
 
@@ -257,7 +266,8 @@ class ShellCodes():
             "Cisco: Creates a new VTY, allocates a password then sets the privilege level to 15",
             "socket",
             21,
-            shellcode
+            shellcode,
+            ""
             ])
 
         #ET ATTACK_RESPONSE Rothenburg Shellcode
@@ -266,7 +276,8 @@ class ShellCodes():
             "ET ATTACK_RESPONSE Rothenburg Shellcode",
             "socket",
             21,
-            shellcode
+            shellcode,
+            "1:17322:1"
             ])
 
         #Mainz/Bielefeld Shellcode
@@ -277,7 +288,8 @@ class ShellCodes():
             "Mainz/Bielefeld Shellcode",
             "socket",
             21,
-            shellcode
+            shellcode,
+            ""
             ])
 
 

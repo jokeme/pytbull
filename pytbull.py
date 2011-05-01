@@ -30,6 +30,7 @@ import os
 import os.path
 import sys
 import datetime
+import re
 
 import testRules
 import badTraffic
@@ -153,6 +154,7 @@ class Pytbull():
             self.testnum += 1
             content += """<tr><th>Time</th><td>%s</td></tr>""" % datetime.datetime.now()
             content += """<tr><th>Test name</th><td>%s</td></tr>""" % payload[0]
+            pattern = "" #v1.0
 
             if payload[1] == "socket":
                 content += """<tr><th>Port</th><td>%s/tcp</td></tr>""" % payload[2]
@@ -160,13 +162,16 @@ class Pytbull():
                 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
                 s.connect((self._target,payload[2]))
                 s.send(payload[3])
+                pattern = payload[4] #v1.0
                 s.close()
             elif payload[1] == "command":
                 content += """<tr><th style="vertical-align:top">Payload</th><td><textarea style="width:800px;height:60px;">%s</textarea></td></tr>""" % ' '.join(payload[2])
                 subprocess.call(payload[2])
+                pattern = payload[3] # v1.0
             elif payload[1] == "scapy":
                 content += """<tr><th style="vertical-align:top">Payload</th><td><textarea style="width:800px;height:60px;">%s</textarea></td></tr>""" % payload[2]
                 eval(payload[2])
+                pattern = payload[3] # v1.0
 
             # Sleep before getting alerts
             time.sleep(5)
@@ -174,6 +179,21 @@ class Pytbull():
             # Get new alerts and calculate new offset
             self.getAlertsFile(self._idstype)
             res = self.getAlertsFromOffset(self.tmpreport, self.offset)
+
+            # Sig matching
+            if pattern != "":
+                if re.search(pattern, res):
+                    color = '#30D021'
+                    test = 'OK'
+                else:
+                    color = '#ff0000;color:#fff'
+                    test = 'KO'
+                content += """<tr><th>Sig matching</th>
+                <td><div style="float:left;text-align:center;background:%s;width:60px;">%s</div>
+                <div style="float:left;margin-left:10px;">Used pattern: %s</div><div style="clear:both"></div></td></tr>""" % (color, test, pattern)
+            else:
+                content += """<tr><th>Sig matching</th><td>None</td></tr>"""
+
             content += """<tr><th style="vertical-align:top">Alerts</th><td><textarea style="width:800px;height:200px;">%s</textarea></td></tr>""" % res
             self.offset = self.getOffset(self.tmpreport)
 

@@ -17,21 +17,24 @@ class BadTraffic():
         self.payloads.append([
             "Nmap Xmas scan",
             "command",
-            [self.config.get('PATHS', 'sudo'), self.config.get('PATHS', 'nmap'), '-sX', '-p 80', self._target]
+            [self.config.get('PATHS', 'sudo'), self.config.get('PATHS', 'nmap'), '-sX', '-p 80', self._target],
+            ""
             ])
 
         ### Malformed Traffic
         self.payloads.append([
             "Malformed Traffic",
             "scapy",
-            """send(IP(dst="%s", ihl=2, version=3)/ICMP())""" % self._target
+            """send(IP(dst="%s", ihl=2, version=3)/ICMP())""" % self._target,
+            ""
             ])
 
         ### Land Attack
         self.payloads.append([
             "Land Attack",
             "scapy",
-            """send(IP(src="%s",dst="%s")/TCP(sport=135,dport=135))""" % (self._target, self._target)
+            """send(IP(src="%s",dst="%s")/TCP(sport=135,dport=135))""" % (self._target, self._target),
+            ""
             ])
 
         return self.payloads

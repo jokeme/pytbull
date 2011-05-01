@@ -1,0 +1,15 @@
+v1.0
+    - Stable Release
+    - Support for test validations (Checks presence of control signature) based
+       on pattern matching (regular expressions). Not implemented for
+       clientSideAttacks and multipleFailedLogins modules.
+    - Support for pcap replay
+
+v0.3 2011-05-30
+    - First Stable Release
+
+v0.2 2011-04-29
+    - Beta Release
+
+v0.1 2011-04-28
+    - Beta Release
