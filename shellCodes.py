@@ -47,7 +47,8 @@ class ShellCodes():
             "SHELLCODE x86 setgid",
             "socket",
             21,
-            shellcode
+            shellcode,
+            "1:649:10"
             ])
 
         #SHELLCODE IRIX SGI + NOOP
@@ -65,7 +66,7 @@ class ShellCodes():
             "socket",
             21,
             shellcode,
-            "1:649:10"
+            ""
             ])
 
         # SHELLCODE x86 setgid 0 && SHELLCODE x86 setuid 0

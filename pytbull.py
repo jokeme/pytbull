@@ -3,7 +3,8 @@
 """
 Pytbull is an IDS/IPS testing framework for Snort & Suricata developed by
 Sebastien Damaye (sebastien #dot# damaye #at# gmail #dot# com).
-It is shipped with 300 tests grouped in 9 testing modules
+It is shipped with 300 tests grouped in 8 testing modules. For more information,
+please refer to <http://www.aldeid.com/index.php/Pytbull>.
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -59,82 +60,82 @@ class Pytbull():
         # Needed for generating raw packets (e.g. some nmap scans)
         print "BASIC CHECKS"
         print "------------"
-        print "\nChecking root privileges",
+        print "\nChecking root privileges".ljust(65, '.'),
         if(os.getuid() != 0):
-            print ".............................. [ Failed ]"
+            print "[ Failed ]"
             print "\nRoot privileges required!"
             sys.exit(0)
-        print ".............................. [   OK   ]"
+        print "[   OK   ]"
 
-        print "Checking remote port 21/tcp (FTP)",
+        print "Checking remote port 21/tcp (FTP)".ljust(65, '.'),
         try:
             ftp = FTP(self._target)
             ftp.login(config.get('CREDENTIALS','ftpuser'),config.get('CREDENTIALS','ftppasswd'))
             f.close()
             ftp.quit()
-            print "..................... [   OK   ]"
+            print "[   OK   ]"
         except:
-            print "..................... [ Failed ]"
+            print "[ Failed ]"
             print "\nFTP Connection refused on port 21/tcp!"
             sys.exit(0)
         
         # Remove temp file
-        print "Removing temporary file",
+        print "Removing temporary file".ljust(65, '.'),
         if os.path.exists("/tmp/pytbull.tmp"):
             os.remove("/tmp/pytbull.tmp")
-        print "............................... [   OK   ]"
+        print "[   OK   ]"
 
         # Print tests selection
-        print "\nTESTS:"
+        print "\nTESTS"
         print "------------"
 
-        print "Client Side Attacks",
+        print "Client Side Attacks".ljust(65, '.'),
         if self.config.get('TESTS', 'clientSideAttacks') == '1':
-            print "................................... [   yes  ]"
+            print "[   yes  ]"
         else:
-            print "................................... [   no   ]"
+            print "[   no   ]"
 
-        print "Test Rules",
+        print "Test Rules".ljust(65, '.'),
         if self.config.get('TESTS', 'testRules') == '1':
-            print "............................................ [   yes  ]"
+            print "[   yes  ]"
         else:
-            print "............................................ [   no   ]"
+            print "[   no   ]"
 
-        print "Bad Traffic",
+        print "Bad Traffic".ljust(65, '.'),
         if self.config.get('TESTS', 'badTraffic') == '1':
-            print "........................................... [   yes  ]"
+            print "[   yes  ]"
         else:
-            print "........................................... [   no   ]"
+            print "[   no   ]"
 
-        print "Fragmented Packets",
+        print "Fragmented Packets".ljust(65, '.'),
         if self.config.get('TESTS', 'fragmentedPackets') == '1':
-            print ".................................... [   yes  ]"
+            print "[   yes  ]"
         else:
-            print ".................................... [   no   ]"
+            print "[   no   ]"
 
-        print "Multiple Failed Logins",
+        print "Multiple Failed Logins".ljust(65, '.'),
         if self.config.get('TESTS', 'multipleFailedLogins') == '1':
-            print "................................ [   yes  ]"
+            print "[   yes  ]"
         else:
-            print "................................ [   no   ]"
+            print "[   no   ]"
 
-        print "Evasion Techniques",
+        print "Evasion Techniques".ljust(65, '.'),
         if self.config.get('TESTS', 'evasionTechniques') == '1':
-            print ".................................... [   yes  ]"
+            print "[   yes  ]"
         else:
-            print ".................................... [   no   ]"
+            print "[   no   ]"
 
-        print "ShellCodes",
+        print "ShellCodes".ljust(65, '.'),
         if self.config.get('TESTS', 'shellCodes') == '1':
-            print "............................................ [   yes  ]"
+            print "[   yes  ]"
         else:
-            print "............................................ [   no   ]"
+            print "[   no   ]"
 
-        print "Denial of Service",
+        print "Denial of Service".ljust(65, '.'),
         if self.config.get('TESTS', 'denialOfService') == '1':
-            print "..................................... [   yes  ]"
+            print "[   yes  ]"
         else:
-            print "..................................... [   no   ]"
+            print "[   no   ]"
 
         print ""
         # Chek if paths are valid
