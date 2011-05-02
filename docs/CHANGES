@@ -1,9 +1,11 @@
 v1.0
     - Stable Release
-    - Support for test validations (Checks presence of control signature) based
-       on pattern matching (regular expressions). Not implemented for
-       clientSideAttacks and multipleFailedLogins modules.
-    - Support for pcap replay
+    - String pattern added (Checks presence of control signature) based on
+       regular expressions. Not implemented for clientSideAttacks and
+       multipleFailedLogins modules. Enables to validate test results by
+       checking the presence of a string in the results.
+    - pcapReplay test module added: pytbull now supports pcap replay based on
+       tcpreplay
 
 v0.3 2011-05-30
     - First Stable Release
