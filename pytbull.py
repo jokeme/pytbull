@@ -44,7 +44,7 @@ import clientSideAttacks
 import pcapReplay
 
 class Pytbull():
-    def __init__(self, banner, target, idstype):
+    def __init__(self, banner, target):
         print banner + "\n"
         
         # Read configuration
@@ -53,7 +53,6 @@ class Pytbull():
 
         # Vars initialization
         self._target    = target
-        self._idstype   = idstype
         self.testnum    = 1
         self.tmpreport  = "/tmp/pytbull.tmp"
 
@@ -185,7 +184,7 @@ class Pytbull():
             time.sleep(5)
 
             # Get new alerts and calculate new offset
-            self.getAlertsFile(self._idstype)
+            self.getAlertsFile()
             res = self.getAlertsFromOffset(self.tmpreport, self.offset)
 
             # Sig matching
@@ -245,7 +244,7 @@ class Pytbull():
             time.sleep(5)
 
             # Get new alerts and calculate new offset
-            self.getAlertsFile(self._idstype)
+            self.getAlertsFile()
             res = self.getAlertsFromOffset(self.tmpreport, self.offset)
             content += """<tr><th style="vertical-align:top">Alerts</th><td><textarea style="width:800px;height:200px;">%s</textarea></td></tr>""" % res
             self.offset = self.getOffset(self.tmpreport)
@@ -284,7 +283,7 @@ class Pytbull():
         content += """<tr><th>Payload</th><td>Multiple failed logins attempts</td></tr>"""
 
         # Get new alerts and calculate new offset
-        self.getAlertsFile(self._idstype)
+        self.getAlertsFile()
         res = self.getAlertsFromOffset(self.tmpreport, self.offset)
         content += """<tr><th style="vertical-align:top">Alerts</th><td><textarea style="width:800px;height:200px;">%s</textarea></td></tr>""" % res
         self.offset = self.getOffset(self.tmpreport)
@@ -296,7 +295,7 @@ class Pytbull():
         self.initializeReport()
 
         # Initial offset
-        self.getAlertsFile(self._idstype)
+        self.getAlertsFile()
         self.offset = self.getOffset(self.tmpreport)
 
         # Do all tests
@@ -354,7 +353,7 @@ class Pytbull():
         print "DONE. Check the report."
         print "-----------------------\n"
 
-    def getAlertsFile(self, idstype):
+    def getAlertsFile(self):
         """Get the alerts file (FTP) from a remote Snort or Suricata server
         and save it to /tmp/pytbull.tmp"""
         # FTP Connection
@@ -362,10 +361,7 @@ class Pytbull():
         ftp.login(config.get('CREDENTIALS','ftpuser'),config.get('CREDENTIALS','ftppasswd'))
         # Get file
         f = open(self.tmpreport, "w")
-        if idstype == "snort":
-            alertsFile = self.config.get('PATHS', 'snortalertsfile')
-        else:
-            alertsFile = self.config.get('PATHS', 'suricataalertsfile')
+        alertsFile = self.config.get('PATHS', 'alertsfile')
         ftp.retrbinary("RETR %s" % alertsFile, f.write)
         #Close file and FTP connection
         f.close()
@@ -512,7 +508,7 @@ if __name__ == '__main__':
                     | .__/ \__, |\__|_.__/ \__,_|_|_|
                     |_|    |___/
                        Sebastien Damaye, aldeid.com"""
-    usg = "sudo ./%prog -t <target> -i <snort|suricata> [--version]"
+    usg = "sudo ./%prog -t <target> [--version]"
     config = ConfigParser.RawConfigParser()
     config.read('config.cfg')
     ver = banner + "\n                                Version " + config.get('VERSION', 'version') + '\n'
@@ -520,17 +516,11 @@ if __name__ == '__main__':
     parser = OptionParser(usage=usg, version=ver)
     parser.add_option("-t", "--target", dest="target",
         help="host to connect to (e.g. 192.168.100.48)")
-    parser.add_option("-i", "--ids", dest="type",
-        help="IDS type (snort|suricata)")
 
     (options, args) = parser.parse_args(sys.argv)
 
     if not options.target:
         parser.error("Host missing. Use -t <target>.")
-    if not options.type:
-        parser.error("IDS type missing. Use -i <snort|suricata>.")
-    if options.type!= "snort" and options.type!="suricata":
-        parser.error("Invalid IDS type. Use -i <snort|suricata>")
     # Instantiate Pytbull class
     oPytbull = Pytbull(banner, options.target, options.type)
     # Do all tests
