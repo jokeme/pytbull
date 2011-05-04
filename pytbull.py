@@ -522,7 +522,7 @@ if __name__ == '__main__':
     if not options.target:
         parser.error("Host missing. Use -t <target>.")
     # Instantiate Pytbull class
-    oPytbull = Pytbull(banner, options.target, options.type)
+    oPytbull = Pytbull(banner, options.target)
     # Do all tests
     oPytbull.doAllTests()
     # Destruct object
