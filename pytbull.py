@@ -71,7 +71,6 @@ class Pytbull():
         try:
             ftp = FTP(self._target)
             ftp.login(config.get('CREDENTIALS','ftpuser'),config.get('CREDENTIALS','ftppasswd'))
-            f.close()
             ftp.quit()
             print "[   OK   ]"
         except:
