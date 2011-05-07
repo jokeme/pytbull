@@ -49,10 +49,10 @@ class PcapReplay():
 
         ### linux-ids-snortbopre.pcap
         self.payloads.append([
-            "ripv2_request_rw",
+            "test",
             "pcap",
-            "pcap/ripv2_request_rw.pcap",
-            ""
+            "pcap/test.pcap",
+            "129:15:1"
             ])
 
         return self.payloads

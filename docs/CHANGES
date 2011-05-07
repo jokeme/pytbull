@@ -6,6 +6,7 @@ v1.0
        checking the presence of a string in the results.
     - pcapReplay test module added: pytbull now supports pcap replay based on
        tcpreplay
+    - Issue #1 fixed
 
 v0.3 2011-05-30
     - First Stable Release
