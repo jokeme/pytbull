@@ -6,6 +6,7 @@ v1.1
     - Code factoring in pytbull.py
     - Timing options are now in parameters (config.cfg)
     - Automatically checks and informs if a new version is available
+    - SVN tags added in source code
 
 v1.0
     - Stable Release
