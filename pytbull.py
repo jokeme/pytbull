@@ -81,6 +81,7 @@ class Pytbull():
             ['Denial of Service',       'denialOfService'],
             ['Pcap Replay',             'pcapReplay']
         ]
+        self.paths      = ['sudo', 'nmap', 'nikto', 'niktoconf', 'hping3', 'tcpreplay']
 
         # Check if prgm is called with root privs
         # Needed for generating raw packets (e.g. some nmap scans)
@@ -104,6 +105,9 @@ class Pytbull():
             print "\nFTP Connection refused on port 21/tcp!"
             sys.exit(0)
         
+        # Chek if paths (from config file) are valid
+        self.checkPaths()
+
         # Remove temp file
         print "Removing temporary file".ljust(65, '.'),
         if os.path.exists("/tmp/pytbull.tmp"):
@@ -122,9 +126,17 @@ class Pytbull():
                 print "[   no   ]"
 
         print ""
-        # Chek if paths are valid
-        # ...to be completed...
-        
+
+    def checkPaths(self):
+        for path in self.paths:
+            print ("Checking path for "+path).ljust(65, '.'),
+            if not os.path.exists(self.config.get('PATHS', path)):
+                print "[ Failed ]"
+                print "\n***ERROR: %s not found. Check the config file." % path
+                sys.exit()
+            else:
+                print "[   OK   ]"
+
     def checkNewVersionAvailable(self):
         try:
             if self.config.get('PROXY','useproxy')=='1':
