@@ -1,4 +1,9 @@
 #!/usr/bin/env python
+###
+# @author $Author$
+# @version $Revision$
+# @lastmodified $Date$
+#
 
 """
 These shellcodes have been extracted from the OSSIM distribution

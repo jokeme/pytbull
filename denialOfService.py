@@ -1,4 +1,9 @@
 #!/usr/bin/env python
+###
+# @author $Author$
+# @version $Revision$
+# @lastmodified $Date$
+#
 
 import ConfigParser
 

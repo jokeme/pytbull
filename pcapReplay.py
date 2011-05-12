@@ -1,4 +1,9 @@
 #!/usr/bin/env python
+###
+# @author $Author$
+# @version $Revision$
+# @lastmodified $Date$
+#
 """
 You can download many pcap files from www.pcapr.net.
 From the initial pcap file, you first need to:

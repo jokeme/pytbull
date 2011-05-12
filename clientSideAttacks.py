@@ -1,4 +1,9 @@
 #!/usr/bin/env python
+###
+# @author $Author$
+# @version $Revision$
+# @lastmodified $Date$
+#
 """
 Pytbull - Client Side Attacks module
 All files are shipped in the ./pdf/ directory

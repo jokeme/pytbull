@@ -1,4 +1,9 @@
 #!/usr/bin/env python
+###
+# @author $Author$
+# @version $Revision$
+# @lastmodified $Date$
+#
 """
 This module tests the ability of the server to track multiple
 failed logins, which could be brute forcing attemps. The example
