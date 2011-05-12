@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 """
+You can download many pcap files from www.pcapr.net.
 From the initial pcap file, you first need to:
     tcpprep \
       --port \
@@ -7,8 +8,6 @@ From the initial pcap file, you first need to:
       --pcap=linux-ids-snortbopre.pcap
     tcprewrite \
       --endpoints=192.168.100.48:192.168.100.45 \
-      --enet-dmac=00:0c:29:0a:ce:e7 \
-      --enet-smac=70:f1:a1:a7:85:95 \
       --cachefile=linux-ids-snortbopre.cache \
       --infile=linux-ids-snortbopre.pcap \
       --outfile=linux-ids-snortbopre_rw.pcap
@@ -47,12 +46,12 @@ class PcapReplay():
 
     def getPayloads(self):
 
-        ### linux-ids-snortbopre.pcap
+        ### slammer
         self.payloads.append([
-            "test",
+            "slammer worm",
             "pcap",
-            "pcap/test.pcap",
-            "129:15:1"
+            "pcap/slammer_rw.pcap",
+            ""
             ])
 
         return self.payloads

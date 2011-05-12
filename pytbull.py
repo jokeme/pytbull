@@ -55,6 +55,17 @@ class Pytbull():
         self._target    = target
         self.testnum    = 1
         self.tmpreport  = "/tmp/pytbull.tmp"
+        self.modules    = [
+            ['Client Side Attacks',     'clientSideAttacks'],
+            ['Test Rules',              'testRules'],
+            ['Bad Traffic',             'badTraffic'],
+            ['Fragmented Packets',      'fragmentedPackets'],
+            ['Multiple Failed Logins',  'multipleFailedLogins'],
+            ['Evasion Techniques',      'evasionTechniques'],
+            ['ShellCodes',              'shellCodes'],
+            ['Denial of Service',       'denialOfService'],
+            ['Pcap Replay',             'pcapReplay']
+        ]
 
         # Check if prgm is called with root privs
         # Needed for generating raw packets (e.g. some nmap scans)
@@ -88,61 +99,20 @@ class Pytbull():
         print "\nTESTS"
         print "------------"
 
-        print "Client Side Attacks".ljust(65, '.'),
-        if self.config.get('TESTS', 'clientSideAttacks') == '1':
-            print "[   yes  ]"
-        else:
-            print "[   no   ]"
-
-        print "Test Rules".ljust(65, '.'),
-        if self.config.get('TESTS', 'testRules') == '1':
-            print "[   yes  ]"
-        else:
-            print "[   no   ]"
-
-        print "Bad Traffic".ljust(65, '.'),
-        if self.config.get('TESTS', 'badTraffic') == '1':
-            print "[   yes  ]"
-        else:
-            print "[   no   ]"
-
-        print "Fragmented Packets".ljust(65, '.'),
-        if self.config.get('TESTS', 'fragmentedPackets') == '1':
-            print "[   yes  ]"
-        else:
-            print "[   no   ]"
-
-        print "Multiple Failed Logins".ljust(65, '.'),
-        if self.config.get('TESTS', 'multipleFailedLogins') == '1':
-            print "[   yes  ]"
-        else:
-            print "[   no   ]"
-
-        print "Evasion Techniques".ljust(65, '.'),
-        if self.config.get('TESTS', 'evasionTechniques') == '1':
-            print "[   yes  ]"
-        else:
-            print "[   no   ]"
-
-        print "ShellCodes".ljust(65, '.'),
-        if self.config.get('TESTS', 'shellCodes') == '1':
-            print "[   yes  ]"
-        else:
-            print "[   no   ]"
-
-        print "Denial of Service".ljust(65, '.'),
-        if self.config.get('TESTS', 'denialOfService') == '1':
-            print "[   yes  ]"
-        else:
-            print "[   no   ]"
+        for module in self.modules:
+            print module[0].ljust(65, '.'),
+            if self.config.get('TESTS', module[1]) == '1':
+                print "[   yes  ]"
+            else:
+                print "[   no   ]"
 
         print ""
         # Chek if paths are valid
         # ...to be completed...
         
-    def testRules(self):
-        payloads = TestRules(self._target).getPayloads()
-        tests(payloads)
+#    def testRules(self):
+#        payloads = TestRules(self._target).getPayloads()
+#        tests(payloads)
 
     def doTest(self, payloads):
         for payload in payloads:
@@ -180,7 +150,7 @@ class Pytbull():
                 pattern = payload[3]
 
             # Sleep before getting alerts
-            time.sleep(5)
+            time.sleep(int(self.config.get('TIMING', 'sleepbeforegetalerts')))
 
             # Get new alerts and calculate new offset
             self.getAlertsFile()
@@ -209,7 +179,7 @@ class Pytbull():
             print "[  done  ]"
             
             # Sleep before next test
-            time.sleep(3)
+            time.sleep(int(self.config.get('TIMING', 'sleepbeforenexttest')))
 
     def doClientSideAttacksTest(self, payloads):
         # Open socket (it will be closed at the end of the tests)
@@ -240,7 +210,7 @@ class Pytbull():
             s.send(payload[1])
 
             # Sleep before getting alerts
-            time.sleep(5)
+            time.sleep(int(self.config.get('TIMING', 'sleepbeforegetalerts')))
 
             # Get new alerts and calculate new offset
             self.getAlertsFile()
@@ -268,7 +238,7 @@ class Pytbull():
                 pass
             print "[  done  ]"
             # Wait 5 seconds between 2 failed auth attempts
-            time.sleep(5)
+            time.sleep(int(self.config.get('TIMING', 'sleepbeforetwoftp')))
 
         # Close FTP connection
         ftp.close()
@@ -277,7 +247,6 @@ class Pytbull():
         content  = """<p>[<a href="#">top</a>]</p>"""
         content += """<table border="1">"""
         content += """<tr><th>Test num</th><td>%s</td></tr>""" % self.testnum
-        self.testnum += 1
         content += """<tr><th>Time</th><td>%s</td></tr>""" % datetime.datetime.now()
         content += """<tr><th>Payload</th><td>Multiple failed logins attempts</td></tr>"""
 
@@ -299,50 +268,16 @@ class Pytbull():
 
         # Do all tests
         # As the socket is not persistent, client side attacks have to be done before all tests
-        if self.config.get('TESTS', 'clientSideAttacks') == '1':
-            self.writeReport("""<h2 id="client-side-attacks">Client Side Attacks</h2>""")
-            print "\nCLIENT SIDE ATTACKS\n------------"
-            self.doClientSideAttacksTest( clientSideAttacks.ClientSideAttacks(self._target).getPayloads() )
-
-        if self.config.get('TESTS', 'testRules') == '1':
-            self.writeReport("""<h2 id="test-rules">Test Rules</h2>""")
-            print "\nTEST RULES\n------------"
-            self.doTest( testRules.TestRules(self._target).getPayloads() )
-
-        if self.config.get('TESTS', 'badTraffic') == '1':
-            self.writeReport("""<h2 id="bad-traffic">Bad Traffic</h2>""")
-            print "\nBAD TRAFFIC\n------------"
-            self.doTest( badTraffic.BadTraffic(self._target).getPayloads() )
-
-        if self.config.get('TESTS', 'fragmentedPackets') == '1':
-            self.writeReport("""<h2 id="fragmented-packets">Fragmented Packets</h2>""")
-            print "\nFRAGMENTED PACKETS\n------------"
-            self.doTest( fragmentedPackets.FragmentedPackets(self._target).getPayloads() )
-
-        if self.config.get('TESTS', 'multipleFailedLogins') == '1':
-            self.writeReport("""<h2 id="multiple-failed-logins">Multiple Failed Logins</h2>""")
-            print "\nMULTIPLE FAILED LOGINS\n------------"
-            self.doMultipleFailedLoginsTest( multipleFailedLogins.MultipleFailedLogins(self._target).getPayloads() )
-
-        if self.config.get('TESTS', 'evasionTechniques') == '1':
-            self.writeReport("""<h2 id="evasion-techniques">Evasion Techniques</h2>""")
-            print "\nEVASION TECHNIQUES\n------------"
-            self.doTest( evasionTechniques.EvasionTechniques(self._target).getPayloads() )
-
-        if self.config.get('TESTS', 'shellCodes') == '1':
-            self.writeReport("""<h2 id="shellcodes">ShellCodes</h2>""")
-            print "\nSHELLCODES\n------------"
-            self.doTest( shellCodes.ShellCodes(self._target).getPayloads() )
-
-        if self.config.get('TESTS', 'denialOfService') == '1':
-            self.writeReport("""<h2 id="denialOfService">Denial of Service</h2>""")
-            print "\nDENIAL OF SERVICE\n------------"
-            self.doTest( denialOfService.DenialOfService(self._target).getPayloads() )
-
-        if self.config.get('TESTS', 'pcapReplay') == '1':
-            self.writeReport("""<h2 id="pcapReplay">Pcap Replay</h2>""")
-            print "\nPCAP REPLAY\n------------"
-            self.doTest( pcapReplay.PcapReplay(self._target).getPayloads() )
+        for module in self.modules:
+            if self.config.get('TESTS', module[1]) == '1':
+                self.writeReport("""<h2 id="%s">%s</h2>""" % (module[1], module[0]))
+                print "\n%s\n------------" % module[0].upper()
+                if module[1]=='clientSideAttacks':
+                    self.doClientSideAttacksTest( clientSideAttacks.ClientSideAttacks(self._target).getPayloads() )
+                elif module[1]=='multipleFailedLogins':
+                    self.doMultipleFailedLoginsTest( multipleFailedLogins.MultipleFailedLogins(self._target).getPayloads() )
+                else:
+                    self.doTest( eval( ('%s.%s'+'(self._target).getPayloads()') % (module[1], module[1][:1].upper()+module[1][1:]) ) )
 
         # Finalize report
         self.finalizeReport()
