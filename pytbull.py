@@ -36,6 +36,7 @@ import os.path
 import sys
 import datetime
 import re
+import urllib
 
 import testRules
 import badTraffic
@@ -50,7 +51,14 @@ import pcapReplay
 class Pytbull():
     def __init__(self, banner, target):
         print banner + "\n"
-        
+
+        # Check if a new version is available
+        version = self.checkNewVersionAvailable()
+        if version!=0:
+            print "A new version (ver %s) is available. You can download it here:" % version
+            print "http://pytbull.googlecode.com/files/pytbull-%s.tar.bz2" % version
+            print ""
+
         # Read configuration
         self.config = ConfigParser.RawConfigParser()
         self.config.read('config.cfg')
@@ -117,6 +125,14 @@ class Pytbull():
 #    def testRules(self):
 #        payloads = TestRules(self._target).getPayloads()
 #        tests(payloads)
+
+    def checkNewVersionAvailable(self):
+        current = open('docs/VERSION', 'r').read()
+        available = urllib.urlopen('http://pytbull.googlecode.com/svn/trunk/docs/VERSION').read()
+        if current!=available:
+            return available
+        else:
+            return 0
 
     def doTest(self, payloads):
         for payload in payloads:
@@ -449,7 +465,7 @@ if __name__ == '__main__':
     usg = "sudo ./%prog -t <target> [--version]"
     config = ConfigParser.RawConfigParser()
     config.read('config.cfg')
-    ver = banner + "\n                                Version " + config.get('VERSION', 'version') + '\n'
+    ver = banner + "\n                                Version " + open('docs/VERSION','r').read() + '\n'
 
     parser = OptionParser(usage=usg, version=ver)
     parser.add_option("-t", "--target", dest="target",

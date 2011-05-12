@@ -5,6 +5,7 @@ v1.1
     - Issue #3 fixed (pcapReplay module not present in the checks on STDOUT)
     - Code factoring in pytbull.py
     - Timing options are now in parameters (config.cfg)
+    - Automatically checks and informs if a new version is available
 
 v1.0
     - Stable Release
