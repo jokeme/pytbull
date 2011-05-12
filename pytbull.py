@@ -5,9 +5,10 @@
 # @lastmodified $Date$
 #
 """
-Pytbull is an IDS/IPS testing framework for Snort & Suricata developed by
-Sebastien Damaye (sebastien #dot# damaye #at# gmail #dot# com).
-It is shipped with 300 tests grouped in 8 testing modules. For more information,
+Pytbull is an IDS/IPS testing framework for Snort & Suricata and any IDS/IPS
+provided you can grab the alerts file via FTP.
+It is developed by Sebastien Damaye (sebastien #dot# damaye #at# gmail #dot# com).
+It is shipped with 300 tests grouped in 9 testing modules. For more information,
 please refer to <http://www.aldeid.com/index.php/Pytbull>.
 
 This program is free software: you can redistribute it and/or modify
