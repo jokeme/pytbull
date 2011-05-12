@@ -1,4 +1,9 @@
 #!/usr/bin/env python
+###
+# @author $Author$
+# @version $Revision$
+# @lastmodified $Date$
+#
 """
 Pytbull server script (reverse shell)
 Used for client side attacks
