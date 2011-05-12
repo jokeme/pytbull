@@ -1,5 +1,9 @@
 #!/usr/bin/env python
-# Revision: $Rev$
+###
+# @author $Author$
+# @version $Revision$
+# @lastmodified $Date$
+#
 """
 Pytbull is an IDS/IPS testing framework for Snort & Suricata developed by
 Sebastien Damaye (sebastien #dot# damaye #at# gmail #dot# com).
