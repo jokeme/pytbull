@@ -7,7 +7,7 @@ v1.1
     - Timing options are now in parameters (config.cfg)
     - Automatically checks and informs if a new version is available (use PROXY
        section in the configuration file if needed)
-    - SVN tags added in source code
+    - New basic checks: checks that paths in the config file are valid
     - SVN tags added in source code
 
 v1.0
