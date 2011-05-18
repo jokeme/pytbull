@@ -1,33 +1,38 @@
-v1.1
-    - Stable release
-    - Issue #2 fixed (test number incrementing twice just after the last test
-       from multipleFailedLogins test)
-    - Issue #3 fixed (pcapReplay module not present in the checks on STDOUT)
-    - Code factoring in pytbull.py
-    - Timing options are now in parameters (config.cfg)
-    - Automatically checks and informs if a new version is available (use PROXY
-       section in the configuration file if needed)
-    - New basic checks: checks that paths in the config file are valid
-    - SVN tags added in source code
+v1.1                                                                  2011-05-13
+--------------------------------------------------------------------------------
+- Stable release
+- Issue #2 fixed (test number incrementing twice just after the last test
+   from multipleFailedLogins test)
+- Issue #3 fixed (pcapReplay module not present in the checks on STDOUT)
+- Code factoring in pytbull.py
+- Timing options are now in parameters (config.cfg)
+- Automatically checks and informs if a new version is available (use PROXY
+   section in the configuration file if needed)
+- New basic checks: checks that paths in the config file are valid
+- SVN tags added in source code
 
-v1.0
-    - Stable Release
-    - String pattern added (Checks presence of control signature) based on
-       regular expressions. Not implemented for clientSideAttacks and
-       multipleFailedLogins modules. Enables to validate test results by
-       checking the presence of a string in the results.
-    - pcapReplay test module added: pytbull now supports pcap replay based on
-       tcpreplay
-    - No need to specify the IDS/IPS type with the -i parameter. Pytbull now
-       supports other IDS/IPS than Snort & Suricata provided you can grab the
-       alerts file via FTP
-    - Issue #1 fixed
+v1.0                                                                  2011-05-07
+--------------------------------------------------------------------------------
+- Stable Release
+- String pattern added (Checks presence of control signature) based on
+   regular expressions. Not implemented for clientSideAttacks and
+   multipleFailedLogins modules. Enables to validate test results by
+   checking the presence of a string in the results.
+- pcapReplay test module added: pytbull now supports pcap replay based on
+   tcpreplay
+- No need to specify the IDS/IPS type with the -i parameter. Pytbull now
+   supports other IDS/IPS than Snort & Suricata provided you can grab the
+   alerts file via FTP
+- Issue #1 fixed
 
-v0.3 2011-05-30
-    - First Stable Release
+v0.3                                                                  2011-05-30
+--------------------------------------------------------------------------------
+- First Stable Release
 
-v0.2 2011-04-29
-    - Beta Release
+v0.2                                                                  2011-04-29
+--------------------------------------------------------------------------------
+- Beta Release
 
-v0.1 2011-04-28
-    - Beta Release
+v0.1                                                                  2011-04-28
+--------------------------------------------------------------------------------
+- Beta Release

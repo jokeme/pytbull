@@ -100,9 +100,9 @@ class Pytbull():
             ftp.login(config.get('CREDENTIALS','ftpuser'),config.get('CREDENTIALS','ftppasswd'))
             ftp.quit()
             print "[   OK   ]"
-        except:
+        except Exception, err:
             print "[ Failed ]"
-            print "\nFTP Connection refused on port 21/tcp!"
+            print "\n***ERROR: %s" % err
             sys.exit(0)
         
         # Chek if paths (from config file) are valid
@@ -343,16 +343,22 @@ class Pytbull():
     def getAlertsFile(self):
         """Get the alerts file (FTP) from a remote Snort or Suricata server
         and save it to /tmp/pytbull.tmp"""
-        # FTP Connection
-        ftp = FTP(self._target)
-        ftp.login(config.get('CREDENTIALS','ftpuser'),config.get('CREDENTIALS','ftppasswd'))
-        # Get file
-        f = open(self.tmpreport, "w")
-        alertsFile = self.config.get('PATHS', 'alertsfile')
-        ftp.retrbinary("RETR %s" % alertsFile, f.write)
-        #Close file and FTP connection
-        f.close()
-        ftp.quit()
+        try:
+            # FTP Connection
+            ftp = FTP(self._target)
+            ftp.login(config.get('CREDENTIALS','ftpuser'),config.get('CREDENTIALS','ftppasswd'))
+            # Get file
+            f = open(self.tmpreport, "w")
+            alertsFile = self.config.get('PATHS', 'alertsfile')
+            ftp.retrbinary("RETR %s" % alertsFile, f.write)
+            #Close file and FTP connection
+            f.close()
+            ftp.quit()
+        except Exception, err:
+            print "\n***ERROR: FTP Error, %s" % err
+            print "Check the path for variable alertsfile in config.cfg."
+            print "Also check privileges on remote host for this path."
+            sys.exit()
 
     def getOffset(self, report):
         """Get initial offset (Number of lines in alert file)"""
