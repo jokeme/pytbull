@@ -107,6 +107,20 @@ class Pytbull():
             sys.exit(0)
 
         #Checking port 80/tcp
+        print "Checking remote port 22/tcp (SSH)".ljust(65, '.'),
+        try:
+            s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            s.connect((self._target,22))
+            s.close()
+            print "[   OK   ]"
+        except Exception, err:
+            print "[ Failed ]"
+            print "\n***ERROR: %s" % err
+            print "Port 22/tcp seems to be close. Install apache on the remote host:"
+            print "sudo apt-get install openssh-server"
+            sys.exit(0)
+
+        #Checking port 80/tcp
         print "Checking remote port 80/tcp (HTTP)".ljust(65, '.'),
         try:
             s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
