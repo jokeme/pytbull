@@ -29,10 +29,13 @@ SERVER
     All you need is Python (2.6.5). On a Debian  based  Linux distribution, this
     can be done by issuing: sudo apt-get install python.
 
-    Also ensure that a FTP service is installed. You can use vsftpd:
+    Ensure that a FTP service is installed. You can use vsftpd:
 
         sudo apt-get install vsftpd
 
+    Last thing: ports 22 and 80 must be open, you can install SSH and Apache:
+
+        sudo apt-get install apache2 openssh-server
 
 THIRD PARTY
 

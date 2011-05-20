@@ -1,3 +1,15 @@
+v1.2                                                                  2011-05-20
+--------------------------------------------------------------------------------
+- Stable release
+- Feature: Now possibility to choose port for reverse shell. Thanks to Keith
+   Pawson for the suggestion!
+- Bug fix: New test added to basic checks: port 22/tcp. Thanks Keith for
+   reporting this bug!
+- Bug fix: New test added to basic checks: port 80/tcp. Thanks Keith for
+   reporting this bug!
+- Bug fix: Error handling added in pytbull.py for getAlertsFile() function
+- Feature: Backtrack request added in docs/
+
 v1.1                                                                  2011-05-13
 --------------------------------------------------------------------------------
 - Stable release
