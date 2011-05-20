@@ -270,7 +270,7 @@ class Pytbull():
         print "Checking if reverse shell is running on remote host".ljust(65,'.'),
         try:
             s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            s.connect((self._target,12345))
+            s.connect((self._target, int(self.config.get('SERVER', 'reverseshellport'))))
         except:
             print "[ Failed ]"
             print "\n***ERROR: Please setup reverse shell on remote server first!"
