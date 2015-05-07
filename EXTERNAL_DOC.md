@@ -1,0 +1,1 @@
+The complete documentation is available here: http://www.aldeid.com/index.php/Pytbull

@@ -1,0 +1,22 @@
+# Description #
+The installation is really straightforward. The framework has been developed in Python, both on the client and on the server side. Refer to following sections for the installation process.
+# Client #
+Ensure Python (2.6.5) and Scapy dependency are installed. On a Debian based Linux distribution, just issue:
+
+`sudo apt-get install python python-scapy`
+
+Also install nmap, hping3 and nikto. Either install them from sources or from the repositories. From the packages, this can be simply done by issuing:
+
+`sudo apt-get install nmap hping3 nikto`
+
+The last step is to configure the server. Refer to the CONFIGURATION help document.
+# Server #
+All you need is Python (2.6.5). On a Debian based Linux distribution, this can be done by issuing:
+
+`sudo apt-get install python`
+
+Also ensure that a FTP service is installed. You can use vsftpd:
+
+`sudo apt-get install vsftpd `
+# Third Party #
+Another server could be needed to host malicious files (see ./pdf/ directory). You can also use online resources.
